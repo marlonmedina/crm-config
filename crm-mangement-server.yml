@@ -101,7 +101,7 @@
               - retiro
             steps:
               - id: "1"
-                title: "Dinero no dispensado en Cajeros Automáticos BP"
+                title: "Dinero no dispensado en Cajeros Automï¿½ticos BP"
             default-field-properties:
               step: "1"
               send-to-app: false
@@ -120,7 +120,7 @@
               "200329":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
               "200330":
-                send-to-app: true            
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dircli'].value"
               "200331":
                 send-to-app: true            
               "200332":
