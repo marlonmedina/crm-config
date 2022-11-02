@@ -159,7 +159,7 @@
                 step: "2"
               "176046":
                 step: "2"
-          19096:
+          17154:
             debug: false
             core-services-pre-CRM:
               generalInfo:
@@ -180,31 +180,33 @@
               send-to-app: false
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
-              "243229":
+              "200325":
                 send-to-app: true
-              "243230":
+              "200326":
                 send-to-app: true
-              "243231":
+              "200327":
                 send-to-app: true
-              "243232":
+              "200328":
                 send-to-app: true
-              "243233":
+              "200321":
                 send-to-app: true
-              "243234":
+              "200329":
                 send-to-app: true
-              "243235":
+              "200330":
                 send-to-app: true            
-              "243237":
+              "200331":
                 send-to-app: true            
-              "243238":
+              "200332":
                 send-to-app: true            
-              "243239":
+              "200312":
                 send-to-app: true
-              "243240":
+              "200333":
                 send-to-app: true     
-              "243241":
+              "200334":
                 send-to-app: true 
-              "243243":
+              "200313":
+                send-to-app: true    
+              "200314":
                 send-to-app: true    
     logging:
       level:
