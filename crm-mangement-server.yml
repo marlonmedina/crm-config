@@ -114,11 +114,11 @@
               "200327":
                 send-to-app: true
               "200328":
-                send-to-app: true
+                send-to-app: false
               "200321":
                 send-to-app: true
               "200329":
-                send-to-app: true
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
               "200330":
                 send-to-app: true            
               "200331":
