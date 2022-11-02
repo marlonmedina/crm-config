@@ -115,6 +115,7 @@
                 send-to-app: true
               "200328":
                 send-to-app: false
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==200327].text"
               "200321":
                 send-to-app: true
               "200329":
