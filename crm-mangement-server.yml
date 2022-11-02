@@ -86,6 +86,59 @@
           "CUENTA":
             type: INPUT
         processes:
+          17154:
+            debug: false
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - [RETIRO EFECTIVO NO DISPENSADO BP CAJEROS/TD SC/HN]
+            steps:
+              - id: "1"
+                title: "Dinero no dispensado en Cajeros Automáticos BP"
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+              "200325":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+              "200326":
+                send-to-app: true
+              "200327":
+                send-to-app: true
+              "200328":
+                send-to-app: true
+              "200321":
+                send-to-app: true
+              "200329":
+                send-to-app: true
+              "200330":
+                send-to-app: true            
+              "200331":
+                send-to-app: true            
+              "200332":
+                send-to-app: true            
+              "200312":
+                send-to-app: true
+              "200333":
+                send-to-app: true     
+              "200334":
+                send-to-app: true 
+              "200313":
+                send-to-app: true    
+              "200314":
+                send-to-app: true 
+              "200315":
+                send-to-app: true   
+              "200316":
+                send-to-app: true        
           16056:
             debug: false
             core-services-pre-CRM:
@@ -158,60 +211,7 @@
               "176045":
                 step: "2"
               "176046":
-                step: "2"
-          17154:
-            debug: false
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - reversiones
-            steps:
-              - id: "1"
-                title: "Datos de contacto"
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "200325":
-                send-to-app: true
-              "200326":
-                send-to-app: true
-              "200327":
-                send-to-app: true
-              "200328":
-                send-to-app: true
-              "200321":
-                send-to-app: true
-              "200329":
-                send-to-app: true
-              "200330":
-                send-to-app: true            
-              "200331":
-                send-to-app: true            
-              "200332":
-                send-to-app: true            
-              "200312":
-                send-to-app: true
-              "200333":
-                send-to-app: true     
-              "200334":
-                send-to-app: true 
-              "200313":
-                send-to-app: true    
-              "200314":
-                send-to-app: true 
-              "200315":
-                send-to-app: true   
-              "200316":
-                send-to-app: true     
+                step: "2"     
     logging:
       level:
         com.bytesw.tyu.bi.components.crm.management.services: trace         
