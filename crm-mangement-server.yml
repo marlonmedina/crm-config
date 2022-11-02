@@ -98,7 +98,7 @@
                 properties:
                   INFORMATION_TYPE: "C"
             tags:
-              - [RETIRO EFECTIVO NO DISPENSADO BP CAJEROS/TD SC/HN]
+              - retiro
             steps:
               - id: "1"
                 title: "Dinero no dispensado en Cajeros Automáticos BP"
