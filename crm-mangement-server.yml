@@ -1,0 +1,211 @@
+  crm-mangement-server.yml: |
+    regional:
+      services:
+        crm:
+          remote-address: http://${host.crm}/~ws/wsgestion/gestion.asmx
+          pooled: true
+          pool-config:
+            max-size: 8
+            min-idle: 4
+            max-idle: 4
+          timeouts:
+            request: 5m
+          properties:
+            employeeSessionId: 0
+            systemSessionId: 36
+            tt: 30
+            process: 18699
+            company: 2
+            employee: 0
+        crm-attachment:
+          employee-session-id: 0
+          system-session-id: 36
+          tt: 30
+          employee-file-create: 0
+          remote-address: http://${host.crm}/~ws/WsArchivoAdjunto/WsArchivoAdjunto.asmx
+          pooled: true
+          pool-config:
+            max-size: 8
+            min-idle: 4
+            max-idle: 4
+          timeouts:
+            request: 5m
+    crm:
+      integration:
+        all-processes:
+          enabled: true
+          attention-area: "BANPAIS APP"
+          configuration:
+            employeeSessionId: "0"
+            systemSessionId: "1"          
+            tt: "39"      
+          default-process:
+            debug: true
+        default-step:
+          id: "default-step"
+          title: Ingrese los datos que se le solicita
+        global-configuration:
+          employeeSessionId: "0"
+          systemSessionId: "0"
+          tt: "30"          
+        default-field-properties:
+          placeholder-text-policy: capitalize-first-letter-and-trim
+          header-policy: no-header
+          header-text-policy: capitalize-first-letter-and-trim
+          title-policy: add-space-and-colon-suffix
+          title-text-policy: capitalize-first-letter-and-trim
+          tooltip-text-policy: capitalize-first-letter-and-trim
+          options-text-policy: capitalize-first-letter-and-trim
+          min-length: 1
+          type: INPUT
+          input-type: TEXT
+          keyboard: ALPHANUMERIC
+          conversion-bean-name: coreDefaultValueBeanConversionFieldValue
+          disabled: false 
+        #Se debe tomar en cuenta que los layers se agregan por "Capas", y en orden del registro
+        layers:
+          "[$[?(@.dataType==1)]]":
+            input-type: NUMBER
+          "[$[?(@.dataType==3)]]":
+            type: DROPDOWN
+          "[$[?(@.crmDataType==152)]]":
+            keyboardExceptions: "A-Z"
+        #Son los overrides de los campos en general
+        global-field-overrides:
+          "193294":
+                value-for-crm: "'BANCO DEL PAIS'"  
+          "12345":
+            required: true
+          "176042":
+            placeholder: "test"
+            header: "Coso"
+          "388324":
+            placeholder: "Favor de no ingresar guiones"
+          "654322":
+        global-static-fields:
+          "CUENTA":
+            type: INPUT
+        processes:
+          16056:
+            debug: false
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - reversiones
+            steps:
+              - id: "1"
+                title: "Datos de contacto"
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+              "176006":
+                value-for-app: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+              "176007":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+              "CUENTA":
+                send-to-app: true
+              "176008":
+                send-to-app: true
+              "176009":
+                send-to-app: true
+              "176010":
+                send-to-app: true
+              "176038":
+                value-for-app: "'REVERSIÓN DE INTERESES VARIOS'"
+                send-to-app: true            
+              "176012":
+                send-to-app: true            
+              "176076":
+                send-to-app: true            
+              "193296":
+                step: "1"
+                send-to-app: true
+              "193294":
+                value-for-crm: "'BANCO DEL PAIS'"     
+              "193295":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value" 
+              "176011":
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code=='test'].text == '1' ? 'poblado': 'despoblado'"    
+          16065:
+            debug: false
+            sort-fields-policy: CRM_ORDER
+            tags:
+              - tc
+              - tarjeta
+              - compras
+              - financiamiento
+            steps:
+              - id: "1"
+                title: Extra financiamiento de Compras
+              - id: "2"
+                title: Otros Datos
+            default-field-properties:
+              step: "1"
+            process-fields:
+              "176041":
+              "176042":
+              "176043":
+              "176045":
+                step: "2"
+              "176046":
+                step: "2"
+          19096:
+            debug: false
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - reversiones
+            steps:
+              - id: "1"
+                title: "Datos de contacto"
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+              "243229":
+                send-to-app: true
+              "243230":
+                send-to-app: true
+              "243231":
+                send-to-app: true
+              "243232":
+                send-to-app: true
+              "243233":
+                send-to-app: true
+              "243234":
+                send-to-app: true
+              "243235":
+                send-to-app: true            
+              "243237":
+                send-to-app: true            
+              "243238":
+                send-to-app: true            
+              "243239":
+                send-to-app: true
+              "243240":
+                send-to-app: true     
+              "243241":
+                send-to-app: true 
+              "243243":
+                send-to-app: true    
+    logging:
+      level:
+        com.bytesw.tyu.bi.components.crm.management.services: trace         
