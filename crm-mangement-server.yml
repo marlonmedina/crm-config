@@ -758,7 +758,146 @@
                 value-for-crm:"' '"
               "444725":
                 value-for-crm:"' '"
-
+          22621:
+            debug: false
+            sort-fields-policy: CRM_ORDER
+            tags:
+              - tc
+              - tarjeta
+              - compras
+              - financiamiento
+            steps:
+              - id: "1"
+                title: Finiquito de TC
+              - id: "2"
+                title: Otros Datos
+            default-field-properties:
+              step: "1"
+            process-fields:
+              "175837":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+              "175838":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numid'].value"
+              "175839":
+                send-to-app: true
+              "175840":
+                send-to-app: true
+              "175841":
+                send-to-app: true
+              "175842":
+                send-to-app: true
+              "175843":
+                send-to-app: true
+              "175844":
+                send-to-app: true
+              "185810":
+                send-to-app: true
+              "175845":
+                value-for-crm:"' '"
+              "193244":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+              "193245":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+              "217003":
+                send-to-app: true
+              "217004":
+                send-to-app: true
+              "217005":
+                send-to-app: true
+              "270507":
+                value-for-crm:"' '"
+              "270525":
+                value-for-crm:"' '"
+              "270529":
+                value-for-crm:"' '"
+              "270530":
+                value-for-crm:"' '"
+              "270573":
+                value-for-crm:"' '"
+              "270600":
+                value-for-crm:"' '"
+              "270602":
+                value-for-crm:"' '"
+              "270603":
+                value-for-crm:"' '"
+              "270604":
+                value-for-crm:"' '"
+              "270605":
+                value-for-crm:"' '"
+              "270606":
+                value-for-crm:"' '"
+              "270607":
+                value-for-crm:"' '"
+              "272275":
+                value-for-crm:"' '"
+              "272274":
+                value-for-crm:"' '"
+              "272276":
+                value-for-crm:"' '"
+              "272277":
+                value-for-crm:"' '"
+              "272278":
+                value-for-crm:"' '"
+              "272279":
+                value-for-crm:"' '"
+              "272280":
+                value-for-crm:"' '"
+              "272281":
+                value-for-crm:"' '"
+              "388808":
+                value-for-crm:"' '"
+              "388809":
+                value-for-crm:"' '"
+              "389848":
+                value-for-crm:"' '"
+              "389849":
+                value-for-crm:"' '"
+              "443106":
+                value-for-crm:"' '"
+          17449:
+            debug: false
+            sort-fields-policy: CRM_ORDER
+            tags:
+              - tc
+              - tarjeta
+              - compras
+              - financiamiento
+            steps:
+              - id: "1"
+                title: Reposicion de TC
+              - id: "2"
+                title: Otros Datos
+            default-field-properties:
+              step: "1"
+            process-fields:
+              "207065":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+              "207066":
+                value-for-crm:"'NATURAL'"
+              "207067":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+              "207068":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numid'].value"
+              "207069":
+                send-to-app: true
+              "207070":
+                send-to-app: true
+              "207071":
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==207070].text"
+              "207072":
+                send-to-app: true
+              "207073":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+              "207074":
+                send-to-app: true
+              "207075":
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==207074].text"
+              "207076":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+              "207077":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+              "403240":
+                send-to-app: true
     logging:
       level:
         com.bytesw.tyu.bi.components.crm.management.services: trace         
