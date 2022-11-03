@@ -668,7 +668,96 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
               "388463":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-
+          22621:
+            debug: false
+            sort-fields-policy: CRM_ORDER
+            tags:
+              - tc
+              - tarjeta
+              - compras
+              - financiamiento
+            steps:
+              - id: "1"
+                title: Finiquito prestamo
+              - id: "2"
+                title: Otros Datos
+            default-field-properties:
+              step: "1"
+            process-fields:
+              "442044":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+              "442045":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+              "444760":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='tipoid'].value"
+              "442046":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+              "442047":
+                send-to-app: true
+              "442048":
+                send-to-app: true
+              "442049":
+                send-to-app: true
+              "442050":
+                send-to-app: true
+              "442051":
+                send-to-app: true
+              "442043":
+                value-for-crm:"' '"
+              "442053":
+                value-for-crm:"' '"
+              "442054":
+                value-for-crm:"' '"
+              "442055":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+              "442056":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+              "443030":
+                send-to-app: true
+              "443033":
+                send-to-app: true
+              "443036":
+                send-to-app: true
+              "444692":
+                send-to-app: true
+              "444693":
+                send-to-app: true
+              "443037":
+                send-to-app: true
+              "443038":
+                send-to-app: true
+              "443040":
+                send-to-app: true
+              "443042":
+                send-to-app: true
+              "443044":
+                send-to-app: true
+              "443045":
+                send-to-app: true
+              "443047":
+                value-for-crm:"' '"
+              "443049":
+                value-for-crm:"' '"
+              "443051":
+                value-for-crm:"' '"
+              "443053":
+                value-for-crm:"' '"
+              "443055":
+                value-for-crm:"' '"
+              "443056":
+                value-for-crm:"' '"
+              "443057":
+                value-for-crm:"' '"
+              "443064":
+                value-for-crm:"' '"
+              "443107":
+                value-for-crm:"'2.1.080'"
+              "444063":
+                value-for-crm:"' '"
+              "444064":
+                value-for-crm:"' '"
+              "444725":
+                value-for-crm:"' '"
 
     logging:
       level:
