@@ -507,60 +507,167 @@
               step: "1"
             process-fields:
               "388458":
-                 
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='prinom'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segnom'].value"
               "453227":
-                  
-              "388319":
-                 
-              "388320":
-                
-              "388321":
-                 
-              "388322":
-                 
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='priape'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segape'].value"  
               "388323":
-                 
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='rtn'].value" 
               "388324":
-                 
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value" 
               "388325":
-                
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value"
               "388326":
-                
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='sexo'].value"
               "388327":
-
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsceci'].value"
               "388328":
-
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='email'].value"
               "388416":
-
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsbarrio'].value"
               "388417":
-
+                send-to-app: true
               "388418":
-
+                send-to-app: true
               "388419":
-
+                send-to-app: true
               "388420":
-
+                send-to-app: true
               "388421":
-
+                send-to-app: true
               "388331":
-
+                send-to-app: true
               "388332":
-
+                send-to-app: true
               "388333":
-
+                send-to-app: true
               "388334":
-
+                send-to-app: true
               "388335":
-
+                send-to-app: true
               "388336":
-
+                send-to-app: true
               "388422":
-
+                send-to-app: true
               "388338":
-
+                send-to-app: true
               "388339":
-
+                send-to-app: true
               "388429":
+                send-to-app: true
+              "388423":
+                send-to-app: true   
+              "388424":
+                send-to-app: true
+              "388425":
+                send-to-app: true
+              "388426":
+                send-to-app: true 
+              "388427":
+                send-to-app: true 
+              "388428":
+                send-to-app: true 
+              "388345":
+                send-to-app: true 
+              "388346":
+                send-to-app: true
+              "388340":
+                send-to-app: true
+              "388347":
+                send-to-app: true
+              "388348":
+                value-for-crm:"' '"
+              "388349":
+                send-to-app: true
+              "388350":
+                send-to-app: true
+              "388415":
+                value-for-crm:"'NO'"
+              "388351":
+                value-for-crm:"'00000'"
+              "388352":
+                value-for-crm:"' '"
+              "388353":
+                value-for-crm:"' '"
+              "388354":
+                value-for-crm:"'1'"
+              "388355":
+                value-for-crm:"'1 AGENCIA TORRE DEL PAIS'"
+              "388386":
+                value-for-crm:"'NO'"
+              "388387":
+                value-for-crm:"' '"
+              "388380":
+                value-for-crm:"' '"
+              "388430":
+                send-to-app: true
+              "388356":
+                value-for-crm:"' '"
+              "388357":
+                value-for-crm:"' '"
+              "388359":
+                value-for-crm:"'A - AMBOS'"
+              "388389":
+                value-for-crm:"' '"
+              "388390":
+                value-for-crm:"' '"
+              "388391":
+                value-for-crm:"' '"
+              "388392":
+                value-for-crm:"' '"
+              "388393":
+                value-for-crm:"' '"
+              "388394":
+                value-for-crm:"' '"
+              "388395":
+                value-for-crm:"' '"
+              "388396":
+                value-for-crm:"' '"
+              "388397":
+                value-for-crm:"' '"
+              "388398":
+                value-for-crm:"' '"
+              "388399":
+                value-for-crm:"' '"
+              "388400":
+                value-for-crm:"' '"
+              "388401":
+                value-for-crm:"' '"
+              "388402":
+                value-for-crm:"' '"
+              "388403":
+                value-for-crm:"' '"
+              "388404":
+                value-for-crm:"' '"
+              "388405":
+                value-for-crm:"' '"
+              "388406":
+                value-for-crm:"' '"
+              "388407":
+                value-for-crm:"' '"
+              "388408":
+                value-for-crm:"' '"
+              "388409":
+                value-for-crm:"' '"
+              "388410":
+                value-for-crm:"' '"
+              "388437":
+                send-to-app: true
+              "388438":
+                value-for-crm:"' '"
+              "388439":
+                value-for-crm:"'0'"
+              "388440":
+                value-for-crm:"'0'"
+              "388459":
+                value-for-crm:"'0'"
+              "388460":
+                send-to-app: true
+              "388461":
+                value-for-crm:"'2.1.080'"
+              "388462":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+              "388463":
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
 
 
     logging:
