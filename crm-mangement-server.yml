@@ -246,15 +246,25 @@
             debug: false
             title: "Extrafinanciamiento de compras"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               # "176039": 
               #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -285,6 +295,16 @@
                     showComponents: 
                       - code: "VALID_THRU"
                 default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+               "subform":
+                index: 8 
+                send-to-app: true 
+                type: "SUBFORM"
+                placeholder: "Ingresa tus datos personales"
+                childComponent: 
+                 - code: "176041"
+                 - header: "Correo electrónico
+                 - code: "176042"
+                 - header: "No. de celular"
               "176041":
                 index: 3
                 send-to-app: true
@@ -332,15 +352,25 @@
             debug: false
             title: "Solicitud de tarjeta de crédito adicional"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -466,15 +496,25 @@
             debug: false
             title: "Solicitud de aumento de límite en tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -582,15 +622,25 @@
             debug: false
             title: "Solicitud de nuevo pin de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -659,17 +709,27 @@
              #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16064:
             debug: false
-            title: "Canje de puntos"
+            title: "Solicitud de canje de puntos"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -770,15 +830,25 @@
             debug: false
             title: "Actualización de datos SC/HN"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -849,15 +919,25 @@
             debug: false
             title: "Solicitud de reversión cobros tarjetas de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -950,15 +1030,25 @@
             debug: false
             title: "Solicitud de constancia de prestamos"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -1117,15 +1207,25 @@
             debug: false
             title: "Solicitud de constancia de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -1307,15 +1407,25 @@
             debug: false
             title: "Reposición de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
@@ -1396,17 +1506,25 @@
             debug: false
             title: "Solicitud de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
             tags:
-              - tc
-              - tarjeta
-              - compras
-              - financiamiento
+              - retiro
             steps:
               - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
             default-field-properties:
               step: "1"
-              progressGoal: 2 
-              currentProgress: 1
+              send-to-app: false
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
               "titulo":
                 index: 1
