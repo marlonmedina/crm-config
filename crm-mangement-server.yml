@@ -1,4 +1,8 @@
-  crm-mangement-server.yml: |
+crm-mangement-server.yml: |
+
+    core: 
+      configuration-clients:
+        credit-card-endpoint: http://credit-card-service:8080
     defaults:
       core-service: &default-core-service
         dta-q-read:
@@ -81,840 +85,67 @@
         #Son los overrides de los campos en general
         global-field-overrides:
           "193294":
-                value-for-crm: "'BANCO DEL PAIS'"  
-          "12345":
-            required: true
-          "388324":
-            placeholder: "Favor de no ingresar guiones"
-          "654322":
+            value-for-crm: "'BANCO DEL PAIS'"  
         global-static-fields:
-          "CUENTA":
-            type: INPUT
+          "mail": &crm-mail-field
+            send-to-app: true
+            header: "Correo electrónico"
+            placeholder: "Correo electrónico"
+            validations: 
+              - regularExpression: '^[a-z0-9!#$%&*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$'
+                message: "Correo inválido"
+          "title": &crm-title-medium-label
+            send-to-app: true
+            header: ""
+            placeholder: ""
+            title: ""
+            hidden: true
+            type: "LABEL"
+            alignment: "center_horizontal"
+            maxLength: 60
+            minLength: 1
+          "accounts": &crm-accounts-field
+            send-to-app: true
+            header: "Selecciona tu cuenta"
+            placeholder: "Selecciona tu cuenta"
+            title: "Selecciona tu cuenta"
+            inputType: "TEXT"
+            type: "ACCOUNTS"
+            default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+          "accountsTC": &crm-accountsTC-field
+            send-to-app: true
+            header: "Selecciona una tarjeta"
+            placeholder: "Selecciona una tarjeta"
+            title: "Selecciona una tarjeta"
+            inputType: "TEXT"
+            type: "ACCOUNTS"
+            default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+          "phone": &crm-phone-field
+            send-to-app: true
+            header: "Número de teléfono"
+            placeholder: "Número de teléfono"
+            keyboard: "NUMERIC"
+          "valor": &crm-valor-field
+            send-to-app: true
+            header: "Monto"
+            placeholder: "0.00"
+            keyboard: "NUMERIC"
+            type: "DECIMAL"
+            decimalPlaces: 2
+          "date": &crm-date-field
+            send-to-app: true
+            header: "Fecha de"
+            placeholder: "Ingresa dd/mm/aaaa"
+            keyboard: "NUMERIC"
+            type: "DATE"
+            date-formate: DDMMAAAA
+          "inputArea": &crm-inputArea-field
+            send-to-app: true
+            header: "Observaciones"
+            placeholder: "Observaciones"
+            type: "INPUT_AREA"
+            maxItems: 5
         processes:
-          17154:
-            debug: false
-            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Dinero no dispensado en Cajeros Automáticos BP"
-                hidden: true
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "200326":
-                index: 2
-                send-to-app: true
-                header: "Selecciona tu cuenta"
-                placeholder: "Selecciona tu cuenta"
-                title: "Selecciona tu cuenta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                  - code: "CHECKING"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-              "200327":
-                index: 3
-                send-to-app: true
-                header: "Número de teléfono"
-                placeholder: "Ingresa tu número de teléfono"
-                keyboard: "NUMERIC"
-                required: true
-          #    "200328":
-          #      send-to-app: true
-          #      value-for-crm: "data.^[id==#field.getStep()].components.^[code==200327].text"
-              "200321":
-                index: 4
-                send-to-app: true
-                header: "Correo electrónico"
-                placeholder: "Ingresa tu correo electrónico"
-          #    "200329":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
-          #    "200330":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dircli'].value"
-          #    "200331":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='Moneda'].value"
-          #    "200332":
-          #      send-to-app: false
-          #      text: "GregorianCalendar.getTime()"
-          #      value-for-crm: ""            
-          #    "200312":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mvalor'].value"
-          #    "200333":
-          #      value-for-crm: "'2.1.080'"     
-          #    "200334":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-          #    "200313":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
-              "selret":
-                index: 5
-                send-to-app: true
-                header: "Retiros realizados"
-                placeholder: "Selecciona el retiro"
-                title: "Selecciona el retiro"
-                titleColor: A4A4A4
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                  - code: "CHECKING"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"    
-          #    "200315":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='refer'].value"
-          #    "200316":
-          #      value-for-crm: "'NATURAL'"
-          #    "200317":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mfecha'].value"
-          #    "200318":
-          #      value-for-crm: "' '"
-          #    "200319":
-          #      value-for-crm: "' '"
-          #    "200336":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='nomatm'].value"
-          #    "200337":
-          #      value-for-crm: "' '"
-          #    "200338":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='codatm'].value"
-              "200340":
-                index: 6
-                send-to-app: true
-                title:  "Tipo de devolución"
-                header: "Tipo de devolución" 
-                type: "RADIOBUTTON" 
-              "200314":
-                index: 7
-                send-to-app: true
-                type: "DECIMAL"
-                keyboard: "NUMERIC"
-                decimalPlaces: 2
-                header: "Ingrese monto a reclamar"
-                required: true
-                placeholder: "0.00"
-                maxLength: 6
-                minLength: 5
-                hidden: "true"
-                options: ""
-          #    "200341":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsciudad'].value"
-          #    "200342":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dscplan'].value"
-          #    "200343":
-          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-          #    "241904":
-          #      value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
-          #    "345166":
-          #      value-for-crm: "' '"
-          #    "345167":
-          #      value-for-crm: "' '"  
-          16065:
-            debug: false
-            title: "Extrafinanciamiento de compras"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              # "176039": 
-              #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
-              # "176040":
-              #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Extrafinanciamiento de compras"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "176043":
-                index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-               "subform":
-                index: 8 
-                send-to-app: true 
-                type: "SUBFORM"
-                placeholder: "Ingresa tus datos personales"
-                childComponent: 
-                 - code: "176041"
-                 - header: "Correo electrónico
-                 - code: "176042"
-                 - header: "No. de celular"
-              "176041":
-                index: 3
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "Correo electrónico" 
-              "176042":
-                index: 4
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true 
-              "176045":
-                index: 5
-                send-to-app: true
-                disabled: true
-                type: "INPUT"
-                textColor: 0000FF
-                text: "Extrafinanciamiento"
-                backgroundColor: FF0000
-                options: "" 
-                value-for-crm: "'EXTRAFINANCIAMIENTO'"
-                maxLength: 30
-                minLength: 1
-              "176046":
-                index: 6
-                send-to-app: true
-                header: "Lugar o comercio"
-                placeholder: "Ingresa el nombre del comercio"
-              "176047":
-                index: 7
-                send-to-app: true
-                type: "INPUT"
-                header: "Observaciones"
-                placeholder: "Observaciones"
-               # type: "INPUT_AREA"
-               # maxItems: 5
-            # "176044":
-            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
-            # "193307":
-            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-            # "193308":
-            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-          16088:
-            debug: false
-            title: "Solicitud de tarjeta de crédito adicional"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Tarjeta de crédito adicional"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "175964":
-                index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-             # "175960":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
-             # "175961":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
-              "175968":
-                index: 3
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "Número de identidad"
-                keyboard: "NUMERIC"
-                required: true
-              "175963":
-                index: 4
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
-              "175962":
-                index: 5
-                send-to-app: true
-                header-policy: no-header
-                header: "Correo electronico"
-                placeholder: "Correo electrónico"   
-             # "175965":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"   
-              "175969":
-                index: 6
-                send-to-app: true
-                header: "Limite en tarjeta adicional"
-                placeholder: "0.00"
-                type: "DECIMAL"
-                keyboard: "NUMERIC"
-                maxLength: 6
-                minLength: 1
-                required: true
-             # "175970":
-             #   value-for-crm:"' '"
-             # "193297":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value" 
-             # "193298":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-              "175967":
-                index: 7
-                send-to-app: true
-                header: "Datos del tarjetahabiente adicional"
-                placeholder: "Nombre del tarjetahabiente adicional"   
-              "441747":
-                index: 8
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Parentesco"  
-              "441748":
-                index: 9
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Empresa donde labora"  
-              "441749":
-                index: 10
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Puesto que desempeña"
-              "441750":
-                index: 11
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
-              "441751":
-                index: 12
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Dirección de domicilio"
-              "441752":
-                index: 13
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Correo electrónico"
-              "175966":
-                index: 14
-                send-to-app: true
-                header: "Selecciona una Agencia o Área BP"
-                header-text-policy: none
-                placeholder: "Agencia o Área BP"
-                title-text-policy: none
-                title: "Agencia o Área BP"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
-          16461:
-            debug: false
-            title: "Solicitud de aumento de límite en tarjeta de crédito"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Aumento de límite en tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-            #  "183440":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
-            #  "183441":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value" 
-            #  "183442":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value" 
-            #  "183443":
-            #    send-to-app: false  
-            #  "243193":
-            #    send-to-app: false
-              "183445":
-                index: 3
-                send-to-app: true
-                header: "Selecciona el tipo de tarjeta"
-                placeholder: "Selecciona el tipo de tarjeta"
-                title: "Selecciona el tipo de tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
-              "183453":
-                index: 4
-                header: "Ingresa tus datos personales"
-                send-to-app: true
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
-              "183456":
-                index: 5
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Correo electrónico"
-              "183448":
-                index: 6
-                send-to-app: true
-                header-policy: no-header 
-                placeholder: "Dirección de residencia"
-              "183452":
-                index: 7
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Direccion completa del trabajo" 
-              "183455":
-                index: 8
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Teléfono de trabajo"
-                keyboard: "NUMERIC"
-                required: true
-              "183449":
-                index: 9
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Nombre del lugar de trabajo" 
-              "183450":
-                index: 10
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Puesto que desempeñas"
-              "183451":
-                index: 11
-                send-to-app: true
-                header: "Salario mensual"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
-              "183444":
-                index: 12
-                send-to-app: true
-                header: "Límite solicitado"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
-            #  "183454":
-            #    value-for-crm: "data.^[id==#field.getStep()].components.^[code==183453].text"
-            #  "183446":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"   
-            #  "183447":
-            #    value-for-crm: "'PERMANENTE'"   
-            #  "183439":
-            #    value-for-crm:"' '"  
-            #  "193312":
-            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-            #  "193313":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-            #  "195406":
-            #    value-for-crm: "'Banca Moderna'" 
-          16074:
-            debug: false
-            title: "Solicitud de nuevo pin de tarjeta de crédito"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Solicitud de nuevo PIN de tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "175925":
-                index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-             # "175921":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
-             # "175922":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value" 
-              "175924":
-                index: 3
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "No. de celular" 
-                keyboard: "NUMERIC"
-                required: true  
-              "175923":
-                index: 4
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "Correo electrónico"
-             # "175926":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
-              "175927":
-                index: 5
-                send-to-app: true
-                header: "Selecciona una Agencia o Área BP"
-                header-text-policy: none
-                placeholder: "Agencia o Área BP"
-                title-text-policy: none
-                title: "Agencia o Área BP"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
-             # "175928":
-             #   value-for-crm:"' '" 
-             # "193288":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"  
-             # "193289":
-             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-          16064:
-            debug: false
-            title: "Solicitud de canje de puntos"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Canje de puntos"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "388707":
-                index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-              "388705":
-                index: 3
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "Correo electronico" 
-              "388706":
-                index: 4
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
-              "388709":
-                index: 5
-                send-to-app: true
-                header: "Lugar o Comercio"
-                placeholder: "Ingresa el nombre del comercio"  
-              "388718":
-                index: 6
-                send-to-app: true
-                header: "Tipo de canje"
-                placeholder: "Selecciona el tipo de canje"
-                title: "Selecciona el tipo de canje"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
-              "388710":
-                index: 7
-                send-to-app: true
-                header: "Valor de la compra"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
-              "388711":
-                index: 8
-                send-to-app: true
-                header: "Fecha de la transaccion"
-                placeholder: "Ingresa dd/mm/aaaa"
-                date-formate: DDMMAAAA
-                required: true
-              "388712":
-                index: 9
-                send-to-app: true
-                header: "Cantidad de BP puntos a canjear"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
-            #  "388703":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
-            #  "388704":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value" 
-            #  "388716":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"  
-            #  "388717":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-            #  "388708":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
-            # "388713":
-            #   send-to-app: true
-            #   header: "Valor del credito"
-            #   placeholder: " "   
-            # "388714":
-            #   value-for-crm:"' '"
-            # "388715":
-            #   value-for-crm:"' '"
-          16069:
-            debug: false
-            title: "Actualización de datos SC/HN"
-            sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
-              generalInfo:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "G"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "C"
-            tags:
-              - retiro
-            steps:
-              - id: "1"
-                currentProgress: 0
-                progressGoal: 0 
-            default-field-properties:
-              step: "1"
-              send-to-app: false
-              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            process-fields:
-              "titulo":
-                index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Actualización de datos tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "175757":
-                index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-            #  "175740":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
-              "175741":
-                index: 3
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "Correo electronico" 
-            #  "175742":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
-              "175743":
-                index: 4
-                send-to-app: true
-                header-policy: no-header
-                placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true  
-              "175755":
-                index: 5
-                send-to-app: true
-                header: "Direccón"
-                placeholder: "Ingresa una dirección"
-                title: "Ingresa una dirección"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"  
-            #  "175756":
-            #    send-to-app: true
-            #  "175758":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
-            #  "175759":
-            #    value-for-crm:"' '"
-            #  "193195":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-            #  "193196":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16056:
             debug: false
             title: "Solicitud de reversión cobros tarjetas de crédito"
@@ -937,84 +168,59 @@
             default-field-properties:
               step: "1"
               send-to-app: false
+              required: true
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
+            # Se envia al app
               "titulo":
                 index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
+                <<: *crm-title-medium-label
                 text: "Solicitud de reversión cobros tarjetas de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
               "176010":
                 index: 2
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "176008":
                 index: 3
-                send-to-app: true
+                <<: *crm-mail-field
                 header: "Ingresa tus datos personales"
-                placeholder: "Correo electrónico"
               "176009":
                 index: 4
-                send-to-app: true
+                <<: *crm-phone-field
                 header-policy: no-header
                 placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
               "176038":
                 index: 5
                 send-to-app: true
                 header: "Tipo de reversión"
                 placeholder: "Selecciona el tipo de reversión"
                 title: "Selecciona el tipo de reversión"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                type: "DROPDOWN"
               "176012":
                 index: 6
-                send-to-app: true
+                <<: *crm-valor-field
                 header: "Monto a reversar"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
               "176076":
                 index: 7
-                send-to-app: true
+                <<: *crm-date-field
                 header: "Fecha de cargo"
-                placeholder: "Ingresa dd/mm/aaaa"
-                date-formate: DDMMAAAA
-                required: true
               "193296":
                 index: 7
                 send-to-app: true
                 title:  "Selecciona la moneda"
                 header: "Selecciona la moneda" 
                 type: "RADIOBUTTON"
+                options:
+                  - code: "L"
+                    title: "Lempiras"
+                  - code: "Us$"
+                    title: "Dólares"
+                  - code: "€"
+                    title: "Euros"
               "176013":
                 index: 8
-                send-to-app: true
-                header: "Observaciones"
-                placeholder: "Observaciones"
+                <<: *crm-inputArea-field
+            # No se envia al app
             #  "176006":
             #    value-for-app: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -1026,9 +232,9 @@
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value" 
             #  "176011":
             #    value-for-crm: "data.^[id==#field.getStep()].components.^[code=='test'].text == '1' ? 'poblado': 'despoblado'" 
-          16114:
+          16065:
             debug: false
-            title: "Solicitud de constancia de prestamos"
+            title: "Extrafinanciamiento de compras"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1048,161 +254,58 @@
             default-field-properties:
               step: "1"
               send-to-app: false
+              required: true
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
+              # Se envia al app
               "titulo":
                 index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Solicitud de constancia de prestamos"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "442047":
+                <<: *crm-title-medium-label
+                text: "Extrafinanciamiento de compras"
+              "176043":
                 index: 2
-                send-to-app: true
-                header: "Ingresa tus datos personales"
-                placeholder: "Correo electrónico"
-              "442048":
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "176041":
                 index: 3
-                send-to-app: true
-                header-policy: no-header
-                header: "No. de celular"
-                placeholder: "0.00"
-                keyboard: "NUMERIC"
-                required: true
-              "442049":
+                <<: *crm-mail-field
+                header: "Ingresa tus datos personales"
+              "176042":
                 index: 4
-                send-to-app: true
+                <<: *crm-phone-field
                 header-policy: no-header
-                placeholder: "Dirección de residencia"
-              "442050":
+                placeholder: "No. de celular"
+              "176045":
                 index: 5
                 send-to-app: true
-                title:  "Tipo de constancia"
-                header: "Tipo de constancia" 
-                type: RADIOBUTTON
-                options:
-                  - title: FINIQUITO
-                    code: Finiquito
-                    index: 1
-                  - title: SALDOS
-                    code: Saldos
-                    index: 2
-                  - title: SALDOS PROYECTADOS
-                    code: Saldos Proyectados
-                    index: 3
-                  - title: EMBAJADA
-                    code: Embajada
-                    index: 4
-              "443030":
+                disabled: true
+                type: "INPUT"
+                textColor: 0000FF
+                text: "Extrafinanciamiento"
+                backgroundColor: FF0000
+                options: "" 
+                value-for-crm: "'EXTRAFINANCIAMIENTO'"
+                maxLength: 30
+                minLength: 1
+              "176046":
                 index: 6
                 send-to-app: true
-                header: "Préstamo"
-                placeholder: "Ingresa el No. de prestamo"
-              "442051":
-                index: 8
-                send-to-app: true
-                header: "Selecciona una Agencia o Area Bp"
-                placeholder: "Agencia o Area BP"
-                title: "Selecciona una Agencia o Area Bp"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
-              "443042":
-                index: 9
-                send-to-app: true
-                header: "Constancia dirigida a" 
-                placeholder: "Ingresa el nombre de la empresa/persona"
-              "checkbox":
-                index: 10
-                send-to-app: true
-                text: "Autorizar a un tercero para recoger constancia"
-                type: "CHECKBOX"
-              "lbl1":
-                index: 11
-                send-to-app: true
-                header: "NOTA:"
-                text: "· La comisión por emisión de la constancia es de L.150.00"
-                type: "MESSAGE"
-              "lbl2":
-                index: 12
-                send-to-app: true
-                text: "· Solicitudes recibidas despues de las 4:00 PM procesarán al siguiente día hábil."
-                type: "MESSAGE"
-              "lbl3":
-                index: 13
-                send-to-app: true
-                text: "· Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
-                type: "MESSAGE"
-            #  "442044":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
-            #  "442045":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
-            #  "444760":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='tipoid'].value"
-            #  "442046":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
-            #  "442043":
-            #    value-for-crm:"' '"
-            #  "442053":
-            #    value-for-crm:"' '"
-            #  "442054":
-            #    value-for-crm:"' '"
-            #  "442055":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-            #  "442056":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-            #  "443033":
-            #    send-to-app: true
-            #  "443036":
-            #    send-to-app: true
-            #  "444692":
-            #    send-to-app: true
-            #  "444693":
-            #    send-to-app: true
-            #  "443037":
-            #    send-to-app: true
-            #  "443038":
-            #    send-to-app: true
-            #  "443040":
-            #    send-to-app: true
-            #  "443044":
-            #    send-to-app: true
-            #  "443045":
-            #    send-to-app: true
-            #  "443047":
-            #    value-for-crm:"' '"
-            #  "443049":
-            #    value-for-crm:"' '"
-            #  "443051":
-            #    value-for-crm:"' '"
-            #  "443053":
-            #    value-for-crm:"' '"
-            #  "443055":
-            #    value-for-crm:"' '"
-            #  "443056":
-            #    value-for-crm:"' '"
-            #  "443057":
-            #    value-for-crm:"' '"
-            #  "443064":
-            #    value-for-crm:"' '"
-            #  "443107":
-            #    value-for-crm:"'2.1.080'"
-            #  "444063":
-            #    value-for-crm:"' '"
-            #  "444064":
-            #    value-for-crm:"' '"
-            #  "444725":
-            #    value-for-crm:"' '"
+                header: "Lugar o comercio"
+                placeholder: "Ingresa el nombre del comercio"
+              "176047":
+                index: 7
+                <<: *crm-inputArea-field
+            # No se envia al app
+            # "176039": 
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+            # "176040":
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+            # "176044":
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+            # "193307":
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+            # "193308":
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16067:
             debug: false
             title: "Solicitud de constancia de tarjeta de crédito"
@@ -1225,31 +328,23 @@
             default-field-properties:
               step: "1"
               send-to-app: false
+              required: true
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
+            # Se envia al app
               "titulo":
                 index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
+                <<: *crm-title-medium-label
                 text: "Solicitud de constancia de tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
               "175839":
                 index: 2
-                send-to-app: true
+                <<: *crm-mail-field
                 header: "Ingresa tus datos personales"
                 placeholder: "Correo electrónico"
               "175840":
                 index: 3
-                send-to-app: true
-                header-policy: no-header
+                <<: *crm-phone-field
                 placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
               "175841":
                 index: 4
                 send-to-app: true
@@ -1276,35 +371,12 @@
                     index: 4
               "175843":
                 index: 6
-                send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "cuenta":
                 index: 7
-                send-to-app: true
-                header: "Selecciona la cuenta a debitar"
-                placeholder: "Cuenta a debitar"
-                title: "Cuenta a debitar"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "SAVINGS"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                  - code: "CHECKING"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                <<: *crm-accounts-field
+                endpoint: /v1-crypt/crm/accounts?type=CHECKING&status=ACTIVE
               "185810":
                 index: 8
                 send-to-app: true
@@ -1335,6 +407,7 @@
                 send-to-app: true
                 text: "· Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
                 type: "MESSAGE"
+            # No se envia al app
             #  "175837":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
             #  "175838":
@@ -1403,9 +476,142 @@
             #    value-for-crm:"' '"
             #  "443106":
             #    value-for-crm:"' '"
-          17449:
+          17154:
             debug: false
-            title: "Reposición de tarjeta de crédito"
+            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                #title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito"
+                currentProgress: 0
+                progressGoal: 0
+                showCancelButton: true 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envian al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Dinero no dispensado en Cajeros Automáticos BP"
+              "200326":
+                index: 2
+                <<: *crm-accounts-field
+                endpoint: /v1-crypt/crm/accounts?type=CHECKING&status=ACTIVE
+              "200327":
+                index: 3
+                <<: *crm-phone-field
+                placeholder: "Ingresa tu número de teléfono"
+              "200321":
+                index: 4
+                <<: *crm-mail-field
+                placeholder: "Ingresa tu correo electrónico"
+              "selret":
+                index: 5
+                send-to-app: true
+                header: "Retiros realizados"
+                placeholder: "Selecciona el retiro"
+                title: "Selecciona el retiro"
+                titleColor: A4A4A4
+                inputType: "TEXT"
+                type: "ACCOUNT_DETAIL"
+              "200340":
+                index: 6
+                send-to-app: true
+                title:  "Tipo de devolución"
+                header: "Tipo de devolución" 
+                type: "RADIOBUTTON"
+                options:
+                  - code: "TOTAL"
+                    title: "total"
+                    showComponents: 
+                      - code: "388712"
+                        visibility: false
+                  - code: "PARCIAL"
+                    title: "Parcial"
+                    showComponents:      
+                      - code: "200314"
+                        visibility: true
+              "200314":
+                index: 7
+                send-to-app: true
+                type: "DECIMAL"
+                keyboard: "NUMERIC"
+                decimalPlaces: 2
+                header: "Ingrese monto a reclamar"
+                placeholder: "0.00"
+                maxLength: 6
+                minLength: 5
+                hidden: false
+                visibility: false
+                options: ""
+            # NO se envian al app
+          #    "200328":
+          #      send-to-app: true
+          #      value-for-crm: "data.^[id==#field.getStep()].components.^[code==200327].text"
+          #    "200329":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+          #    "200330":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dircli'].value"
+          #    "200331":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='Moneda'].value"
+          #    "200332":
+          #      send-to-app: false
+          #      text: "GregorianCalendar.getTime()"
+          #      value-for-crm: ""            
+          #    "200312":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mvalor'].value"
+          #    "200333":
+          #      value-for-crm: "'2.1.080'"     
+          #    "200334":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+          #    "200313":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+          #    "200315":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='refer'].value"
+          #    "200316":
+          #      value-for-crm: "'NATURAL'"
+          #    "200317":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mfecha'].value"
+          #    "200318":
+          #      value-for-crm: "' '"
+          #    "200319":
+          #      value-for-crm: "' '"
+          #    "200336":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='nomatm'].value"
+          #    "200337":
+          #      value-for-crm: "' '"
+          #    "200338":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='codatm'].value"
+          #    "200341":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsciudad'].value"
+          #    "200342":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dscplan'].value"
+          #    "200343":
+          #      value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+          #    "241904":
+          #      value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
+          #    "345166":
+          #      value-for-crm: "' '"
+          #    "345167":
+          #      value-for-crm: "' '"  
+          16088:
+            debug: false
+            title: "Solicitud de tarjeta de crédito adicional"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1425,25 +631,565 @@
             default-field-properties:
               step: "1"
               send-to-app: false
+              required: true
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
+            # Se envia al app
               "titulo":
                 index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
-                text: "Reposición de tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
-              "207072":
+                <<: *crm-title-medium-label
+                text: "Tarjeta de crédito adicional"
+              "175964":
                 index: 2
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "175968":
+                index: 3
                 send-to-app: true
-                header: "Selecciona una tarjeta"
-                placeholder: "Selecciona una tarjeta"
-                title: "Selecciona una tarjeta"
+                header: "Ingresa tus datos personales"
+                placeholder: "Número de identidad"
+                keyboard: "NUMERIC"
+              "175963":
+                index: 4
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "No. de celular"
+              "175962":
+                index: 5
+                <<: *crm-mail-field
+                header-policy: no-header
+                placeholder: "Correo electrónico"
+              "175969":
+                index: 6
+                <<: *crm-valor-field
+                header: "Límite en tarjeta adicional"
+              "175967":
+                index: 7
+                send-to-app: true
+                header: "Datos del tarjetahabiente adicional"
+                placeholder: "Nombre del tarjetahabiente adicional"   
+              "441747":
+                index: 8
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Parentesco"  
+              "441748":
+                index: 9
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Empresa donde labora"  
+              "441749":
+                index: 10
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Puesto que desempeña"
+              "441750":
+                index: 11
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "No. de celular"
+              "441751":
+                index: 12
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Dirección de domicilio"
+              "441752":
+                index: 13
+                <<: *crm-mail-field
+                header-policy: no-header
+                placeholder: "Correo electrónico"
+              "175966":
+                index: 14
+                send-to-app: true
+                header: "Selecciona una Agencia o Área BP"
+                header-text-policy: none
+                placeholder: "Agencia o Área BP"
+                title-text-policy: none
+                title: "Agencia o Área BP"
+                inputType: "TEXT"
+                type: "ACCOUNTS"
+                options:
+                  - code: "SAVINGS"
+                    showComponents: 
+                      - code: "VALID_THRU"
+                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
+            # No se envia al app 
+             # "175960":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+             # "175961":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+             # "175965":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+            # "175970":
+             #   value-for-crm:"' '"
+             # "193297":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value" 
+             # "193298":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+          16461:
+            debug: false
+            title: "Solicitud de aumento de límite en tarjeta de crédito"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            #Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Aumento de límite en tarjeta de crédito"
+              "183445":
+                index: 3
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "183453":
+                index: 4
+                header: "Ingresa tus datos personales"
+                <<: *crm-phone-field
+                placeholder: "No. de celular"
+              "183456":
+                index: 5
+                <<: *crm-mail-field
+                header-policy: no-header
+                placeholder: "Correo electrónico"
+              "183448":
+                index: 6
+                send-to-app: true
+                header-policy: no-header 
+                placeholder: "Dirección de residencia"
+              "183452":
+                index: 7
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Direccion completa del trabajo" 
+              "183455":
+                index: 8
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "Teléfono de trabajo"
+              "183449":
+                index: 9
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Nombre del lugar de trabajo" 
+              "183450":
+                index: 10
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Puesto que desempeñas"
+              "183451":
+                index: 11
+                <<: *crm-valor-field
+                header: "Salario mensual"
+              "183444":
+                index: 12
+                <<: *crm-valor-field
+                header: "Límite solicitado"
+            #No se envia al app
+            #  "183440":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+            #  "183441":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value" 
+            #  "183442":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value" 
+            #  "183443":
+            #    send-to-app: false  
+            #  "243193":
+            #    send-to-app: false
+            #  "183454":
+            #    value-for-crm: "data.^[id==#field.getStep()].components.^[code==183453].text"
+            #  "183446":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"   
+            #  "183447":
+            #    value-for-crm: "'PERMANENTE'"   
+            #  "183439":
+            #    value-for-crm:"' '"  
+            #  "193312":
+            #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+            #  "193313":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+            #  "195406":
+            #    value-for-crm: "'Banca Moderna'" 
+          16074:
+            debug: false
+            title: "Solicitud de nuevo pin de tarjeta de crédito"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Solicitud de nuevo PIN de tarjeta de crédito"
+              "175925":
+                index: 2
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "175924":
+                index: 3
+                <<: *crm-phone-field
+                header: "Ingresa tus datos personales"
+                placeholder: "No. de celular"
+              "175923":
+                index: 4
+                <<: *crm-mail-field
+                header-policy: no-header
+                placeholder: "Correo electrónico"
+              "175927":
+                index: 5
+                send-to-app: true
+                header: "Selecciona una Agencia o Área BP"
+                header-text-policy: none
+                placeholder: "Agencia o Área BP"
+                title-text-policy: none
+                title: "Agencia o Área BP"
+                inputType: "TEXT"
+                type: "ACCOUNTS"
+                options:
+                  - code: "SAVINGS"
+                    showComponents: 
+                      - code: "VALID_THRU"
+                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNTS'].text()}"
+            # No se envia al app
+             # "175921":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+             # "175922":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value" 
+             # "175926":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+             # "175928":
+             #   value-for-crm:"' '" 
+             # "193288":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"  
+             # "193289":
+             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+          21839:
+            debug: false
+            title: "Solicitud de canje de puntos"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Canje de puntos"
+              "388707":
+                index: 2
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "388705":
+                index: 3
+                <<: *crm-mail-field
+                header: "Ingresa tus datos personales"
+                placeholder: "Correo electronico" 
+              "388706":
+                index: 4
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "No. de celular"
+              "388709":
+                index: 5
+                send-to-app: true
+                header: "Lugar o Comercio"
+                placeholder: "Ingresa el nombre del comercio"  
+              "388718":
+                index: 6
+                send-to-app: true
+                header: "Tipo de canje"
+                placeholder: "Selecciona el tipo de canje"
+                title: "Selecciona el tipo de canje"
+                type: "DROPDOWN"
+                options:
+                  - code: "PAGO DE TARJETA DE CRÉDITO"
+                    title: "PAGO DE TARJETA DE CRÉDITO"
+                    showComponents: 
+                      - code: "388712"
+                        visibility: true
+                        setValueService: "PuntosTC"
+                  - code: "BOLETO AEREO/AGENCIA DE VIAJES"
+                    title: "BOLETO AEREO/AGENCIA DE VIAJES"
+                    showComponents:      
+                      - code: "388712"
+                        visibility: true
+                        setValueService: "PuntosViajes"
+              "388710":
+                index: 7
+                send-to-app: true
+                header: "Valor de la compra"
+                placeholder: "0.00"
+                keyboard: "NUMERIC"
+              "388711":
+                index: 8
+                <<: *crm-date-field
+                header: "Fecha de la transacción"
+              "388712":
+                index: 9
+                send-to-app: true
+                header: "Cantidad de BP puntos a canjear"
+                placeholder: "0.00"
+                type: "CALC"
+                keyboard: "NUMERIC"
+                endpoint: "/v1-crypt/crm/calculate" 
+                options:
+                  showComponents:
+                    - code: "388713"
+                      setValueService: "valorCredito"
+                      visibility: true
+              "388713":
+                index: 10
+                send-to-app: true
+                header: "Valor del credito"
+                placeholder: "0.00"
+                disabled: true
+                type: "INPUT"
+                textColor: 0000FF
+                text: "0.00"
+                backgroundColor: FF0000
+                options: ""    
+            # No se envia al app
+            #  "388703":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+            #  "388704":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value" 
+            #  "388716":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"  
+            #  "388717":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+            #  "388708":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+            # "388714":
+            #   value-for-crm:"' '"
+            # "388715":
+            #   value-for-crm:"' '"
+            functions:
+              "PuntosTC":
+                resolver-bean-name: crmSimpleParametersResolver
+                core-function: "0000000003"
+                arguments:
+                  - name: puntos
+                    expression: "data.^[id=='1'].components.^[code=='388712'].text"
+                    input-formatter: crmDefaultNumberConverter
+                result-fields:
+                  - name: totalCredito
+                    expression: "results.^[id=='Resultados'].groups.^[id=='rTotal'].value"
+              "PuntosViajes":
+                resolver-bean-name: crmSimpleParametersResolver
+                core-function: "0000000005"
+                arguments:
+                  - name: puntos
+                    expression: "data.^[id=='1'].components.^[code=='388712'].text"
+                    input-formatter: crmDefaultNumberConverter
+                result-fields:
+                  - name: totalCredito
+                    expression: "results.^[id=='Resultados'].groups.^[id=='rTotal'].value"
+          16069:
+            debug: false
+            title: "Actualización de datos SC/HN"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Actualización de datos tarjeta de crédito"
+              "175757":
+                index: 2
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "175741":
+                index: 3
+                <<: *crm-mail-field
+                header: "Ingresa tus datos personales"
+                placeholder: "Correo electronico"
+              "175743":
+                index: 4
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "No. de celular"
+              "175755":
+                index: 5
+                send-to-app: true
+                header: "Direccón"
+                placeholder: "Ingresa una dirección"
+                title: "Ingresa una dirección"
+                inputType: "TEXT"
+                type: "ACCOUNTS"
+                options:
+                  - code: "CREDIT_CARD"
+                    showComponents: 
+                      - code: "VALID_THRU"
+                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+            # No se envia al app
+            #  "175740":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+            #  "175742":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+            #  "175756":
+            #    send-to-app: true
+            #  "175758":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+            #  "175759":
+            #    value-for-crm:"' '"
+            #  "193195":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+            #  "193196":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+          16114:
+            debug: false
+            title: "Solicitud de constancia de prestamos"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+                currentProgress: 0
+                progressGoal: 0 
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Solicitud de constancia de prestamos"
+              "442047":
+                index: 2
+                <<: *crm-mail-field
+                header: "Ingresa tus datos personales"
+                placeholder: "Correo electrónico"
+              "442048":
+                index: 3
+                <<: *crm-phone-field
+                header-policy: no-header
+                placeholder: "No. de celular"
+              "442049":
+                index: 4
+                send-to-app: true
+                header-policy: no-header
+                placeholder: "Dirección de residencia"
+              "442050":
+                index: 5
+                send-to-app: true
+                title:  "Tipo de constancia"
+                header: "Tipo de constancia" 
+                type: RADIOBUTTON
+                options:
+                  - title: FINIQUITO
+                    code: Finiquito
+                    index: 1
+                  - title: SALDOS
+                    code: Saldos
+                    index: 2
+                  - title: SALDOS PROYECTADOS
+                    code: Saldos Proyectados
+                    index: 3
+                  - title: EMBAJADA
+                    code: Embajada
+                    index: 4
+              "fecha":
+                index: 6
+                <<: *crm-date-field
+                header: "Fecha final"
+              "443030":
+                index: 7
+                send-to-app: true
+                header: "Préstamo"
+                placeholder: "Ingresa el No. de prestamo"
+              "442051":
+                index: 8
+                send-to-app: true
+                header: "Selecciona una Agencia o Area Bp"
+                placeholder: "Agencia o Area BP"
+                title: "Selecciona una Agencia o Area Bp"
                 inputType: "TEXT"
                 required: true
                 type: "ACCOUNTS"
@@ -1452,18 +1198,135 @@
                     showComponents: 
                       - code: "VALID_THRU"
                 default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+              "443042":
+                index: 9
+                send-to-app: true
+                header: "Constancia dirigida a" 
+                placeholder: "Ingresa el nombre de la empresa/persona"
+              "checkbox":
+                index: 10
+                send-to-app: true
+                text: "Autorizar a un tercero para recoger constancia"
+                type: "CHECKBOX"
+              "lbl1":
+                index: 11
+                send-to-app: true
+                header: "NOTA:"
+                text: "· La comisión por emisión de la constancia es de L.150.00"
+                type: "MESSAGE"
+              "lbl2":
+                index: 12
+                send-to-app: true
+                text: "· Solicitudes recibidas despues de las 4:00 PM procesarán al siguiente día hábil."
+                type: "MESSAGE"
+              "lbl3":
+                index: 13
+                send-to-app: true
+                text: "· Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
+                type: "MESSAGE"
+            # No se envia al app
+            #  "442044":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+            #  "442045":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+            #  "444760":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='tipoid'].value"
+            #  "442046":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+            #  "442043":
+            #    value-for-crm:"' '"
+            #  "442053":
+            #    value-for-crm:"' '"
+            #  "442054":
+            #    value-for-crm:"' '"
+            #  "442055":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+            #  "442056":
+            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+            #  "443033":
+            #    send-to-app: true
+            #  "443036":
+            #    send-to-app: true
+            #  "444692":
+            #    send-to-app: true
+            #  "444693":
+            #    send-to-app: true
+            #  "443037":
+            #    send-to-app: true
+            #  "443038":
+            #    send-to-app: true
+            #  "443040":
+            #    send-to-app: true
+            #  "443044":
+            #    send-to-app: true
+            #  "443045":
+            #    send-to-app: true
+            #  "443047":
+            #    value-for-crm:"' '"
+            #  "443049":
+            #    value-for-crm:"' '"
+            #  "443051":
+            #    value-for-crm:"' '"
+            #  "443053":
+            #    value-for-crm:"' '"
+            #  "443055":
+            #    value-for-crm:"' '"
+            #  "443056":
+            #    value-for-crm:"' '"
+            #  "443057":
+            #    value-for-crm:"' '"
+            #  "443064":
+            #    value-for-crm:"' '"
+            #  "443107":
+            #    value-for-crm:"'2.1.080'"
+            #  "444063":
+            #    value-for-crm:"' '"
+            #  "444064":
+            #    value-for-crm:"' '"
+            #  "444725":
+            #    value-for-crm:"' '"
+          17449:
+            debug: false
+            title: "Reposición de tarjeta de crédito"
+            sort-fields-policy: INDEX_ORDER
+            core-services-pre-CRM:
+              generalInfo:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "G"
+              infoAccounts:
+                service: app-infgra
+                properties:
+                  INFORMATION_TYPE: "C"
+            tags:
+              - retiro
+            steps:
+              - id: "1"
+             #   title: "Reposición de tarjeta de crédito"
+                currentProgress: 0
+                progressGoal: 0 
+             #   #showCancelButton: true
+            default-field-properties:
+              step: "1"
+              send-to-app: false
+              required: true
+              value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            process-fields:
+            # Se envia al app
+              "titulo":
+                index: 1
+                <<: *crm-title-medium-label
+                text: "Reposición de tarjeta de crédito"
+              "207072":
+                index: 2
+                <<: *crm-accountsTC-field
+                endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "207070":
                 index: 3
-                send-to-app: true
-                header: "Numero de telefono "
-                placeholder: "Ingresa tu número de télefono"
-                keyboard: "NUMERIC"
-                required: true
+                <<: *crm-phone-field
               "207069":
                 index: 4
-                send-to-app: true
-                header: "Corrreo electrónico"
-                placeholder: "Ingresa tu correo electronico"
+                <<: *crm-mail-field
               "207074":
                 index: 5
                 send-to-app: true
@@ -1471,7 +1334,6 @@
                 placeholder: "Ingresa una dirección"
                 title: "Ingresa una dirección"
                 inputType: "TEXT"
-                required: true
                 type: "ACCOUNTS"
                 options:
                   - code: "CREDIT_CARD"
@@ -1484,6 +1346,7 @@
                 title:  "Motivo de reposición"
                 header: "Motivo de reposición" 
                 type: "RADIOBUTTON"
+            # No se envia al app
             #  "207065":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
             #  "207066":
@@ -1524,31 +1387,24 @@
             default-field-properties:
               step: "1"
               send-to-app: false
+              required: true
               value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
             process-fields:
+            # Se envia al app
               "titulo":
                 index: 1
-                send-to-app: true
-                header: ""
-                placeholder: ""
-                title: ""
+                <<: *crm-title-medium-label
                 text: "Solicitud de tarjeta de crédito"
-                type: "LABEL"
-                alignment: "center_horizontal"
-                maxLength: 60
-                minLength: 1
               "388328":
                 index: 2
-                send-to-app: true
+                <<: *crm-mail-field
                 header: "Ingresa tus datos personales"
                 placeholder: "Correo electronico" 
               "388335":
                 index: 3
-                send-to-app: true
+                <<: *crm-phone-field
                 header-policy: no-header
                 placeholder: "No. de celular"
-                keyboard: "NUMERIC"
-                required: true
               "388323":
                 index: 4
                 send-to-app: true
@@ -1619,6 +1475,7 @@
                     showComponents: 
                       - code: "VALID_THRU"
                 default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+            # No se envia al app
             #  "388458":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='prinom'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segnom'].value"
             #  "453227":
