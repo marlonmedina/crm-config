@@ -205,14 +205,33 @@
           "radiobutton": &crm-field-radiobutton
             send-to-app: true
             type: "RADIOBUTTON"
+          "checkbox": &crm-field-checkbox
+            send-to-app: true
+            type: "CHECKBOX"
+          "inputList": &crm-field-inputList
+            send-to-app: true
+            type: "INPUT_LIST"
           "message": &crm-field-message
             send-to-app: true
             type: "MESSAGE"
+            textColor: 5A5A5A
           "subform": &crm-field-subform
             placeholder-color: "5A5A5A"
             send-to-app: true
             title: ""
             type: "SUBFORM"
+          "label": &crm-field-label
+            sent-to-app: true
+            type: "LABEL"
+            header: ""
+            alingTop: -25
+            placeholder: ""
+            required: false
+            maxLength: 60
+            minLength: 1
+            endpoint: ""
+            validations: ""
+            alignment: "center_horizontal"
         processes:
           16056:
             debug: false
@@ -270,7 +289,6 @@
               "193296":
                 index: 7
                 <<: *crm-field-radiobutton
-                title:  "Selecciona la moneda"
                 header: "Selecciona la moneda" 
                 options:
                   - code: "L"
@@ -360,7 +378,7 @@
             #   value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito - PREVIEW"
+            title: "Solicitud de constancia de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -384,7 +402,7 @@
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
-                text: "Solicitud de constancia de tarjeta de crédito - PREVIEW"
+                text: "Solicitud de constancia de tarjeta de crédito"
               "175839":
                 index: 2
                 <<: *crm-field-mail
@@ -402,47 +420,69 @@
               "217004":
                 index: 5
                 <<: *crm-field-radiobutton
-                title:  "Tipo de constancia"
                 header: "Tipo de constancia" 
                 options:
                   - title: CRÉDITO VIGENTE
                     code: Crédito Vigente
                     index: 1
+                    showComponents:
+                      - code: "175842"
+                        visibility: false
+                      - code: "217005"
+                        visibility: false
                   - title: DIRIGIDA CON SALDO
                     code: Dirigida con saldo
                     index: 2
+                    showComponents:
+                      - code: "175842"
+                        visibility: false
+                      - code: "217005"
+                        visibility: false
                   - title: EMBAJADA
                     code: Embajada
                     index: 3
+                    showComponents:
+                      - code: "175842"
+                        visibility: true
+                      - code: "217005"
+                        visibility: false
                   - title: FINIQUITO
                     code: Finiquito
                     index: 4
-              "175843":
+                    showComponents:
+                      - code: "175842"
+                        visibility: false
+                      - code: "217005"
+                        visibility: true
+              "175842":
                 index: 6
+                <<: *crm-field-date
+                header: "Fecha de la cita en la embajada"
+                hidden: true
+              "217005":
+                index: 7
+                <<: *crm-field-date
+                header: "Fecha Final"
+                hidden: true
+              "175843":
+                index: 8
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "cuenta":
-                index: 7
+                index: 9
                 <<: *crm-field-accounts
                 endpoint: /v1-crypt/crm/accounts?type=CHECKING&status=ACTIVE
                 header: "Selecciona la cuenta a debitar"
                 placeholder: "Cuenta a debitar"
               "185810":
-                index: 8
-                <<: *crm-field-selage
-              "lbl1":
-                index: 9
-                <<: *crm-field-message
-                header: "NOTA:"
-                text: "· La comisión por emisión de la constancia es de L.150.00"
-              "lbl2":
                 index: 10
-                <<: *crm-field-message
-                text: "· Solicitudes recibidas despues de las 4:00 PM procesarán al siguiente día hábil."
-              "lbl3":
+                <<: *crm-field-selage
+              "msg1":
                 index: 11
                 <<: *crm-field-message
-                text: "· Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
+                header-text-policy: none
+                header: "NOTA:"
+                text: "La comisión por emisión de la constancia es de L.150.00\\n\\t•Solicitudes recibidas después de las 4:00 PM procesarán al siguiente día hábil.\\n\\t•Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
             #---No en APP---#
             #  "175837":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -514,7 +554,7 @@
             #    value-for-crm:"' '"
           16069:
             debug: false
-            title: "Actualización de datos SC/HN - PREVIEW"
+            title: "Actualización de datos SC/HN"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -538,7 +578,7 @@
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
-                text: "Actualización de datos tarjeta de crédito - PREVIEW"
+                text: "Actualización de datos tarjeta de crédito"
               "175757":
                 index: 2
                 <<: *crm-field-accountsTC
@@ -594,6 +634,19 @@
                       hiddenHeader: true
                       placeholder: "No. de casa"
                       without-padding-bottom: true
+                    - code: departamento
+                      <<: *crm-field-dropdown
+                      hiddenHeader: true
+                      placeholder: "Departamento"
+                      without-padding-bottom: true
+                      endpoint: "/v1-crypt/catalogs/departments?codpai=001"
+                    - code: municipio
+                      <<: *crm-field-dropdown
+                      hiddenHeader: true
+                      placeholder: "Municipio"
+                      without-padding-bottom: true
+                      endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
+                      parent: "departamento"
             #---No en APP---#
             #  "175740":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
@@ -791,10 +844,15 @@
                 index: 1
                 <<: *crm-title-medium-label
                 text: "Aumento de límite en tarjeta de crédito"
-              "183445":
-                index: 3
+              "183446":
+                index: 2
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "183445":
+                index: 3
+                <<: *crm-field-dropdown
+                header: "Selecciona el tipo de tarjeta"
+                placeHolder: "Selecciona el tipo de tarjeta"
               "183453":
                 index: 4
                 header: "Ingresa tus datos personales"
@@ -914,16 +972,18 @@
                 <<: *crm-field-accountsDetail
                 header: "Retiros realizados"
                 placeholder: "Selecciona el retiro"
+                parent: "200326"
+                disabled: true
+                visibility: true
               "200340":
                 index: 6
                 <<: *crm-field-radiobutton
-                title:  "Tipo de devolución"
                 header: "Tipo de devolución"
                 options:
                   - code: "TOTAL"
                     title: "total"
                     showComponents: 
-                      - code: "388712"
+                      - code: "200314"
                         visibility: false
                   - code: "PARCIAL"
                     title: "Parcial"
@@ -988,7 +1048,7 @@
           #      value-for-crm: "' '"
           17449:
             debug: false
-            title: "Reposición de tarjeta de crédito - PREVIEW"
+            title: "Reposición de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1012,7 +1072,7 @@
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
-                text: "Reposición de tarjeta de crédito - PREVIEW"
+                text: "Reposición de tarjeta de crédito"
               "207072":
                 index: 2
                 <<: *crm-field-accountsTC
@@ -1027,10 +1087,59 @@
                 placeholder: "Ingresa tu correo electrónico"
               "207074":
                 index: 5
-                <<: *crm-field-dropdown
+                <<: *crm-field-subform
                 header: "Dirección"
                 placeholder: "Ingresa una dirección"
-                # title: "Ingresa una dirección"
+                child-component:
+                 - components:
+                    - code: barrio
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Barrio/colonia/residencia"
+                      without-padding-bottom: true
+                    - code: calle
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Calle"
+                      without-padding-bottom: true
+                    - code: avenida
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Avenida"
+                      without-padding-bottom: true
+                    - code: bloque
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Bloque"
+                      without-padding-bottom: true
+                    - code: etapa
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Etapa"
+                      without-padding-bottom: true
+                    - code: puntref
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "Punto de referencia"
+                      without-padding-bottom: true
+                    - code: casa
+                      <<: *crm-field-inputAlfa
+                      hiddenHeader: true
+                      placeholder: "No. de casa"
+                      without-padding-bottom: true
+                    - code: departamento
+                      <<: *crm-field-dropdown
+                      hiddenHeader: true
+                      placeholder: "Departamento"
+                      without-padding-bottom: true
+                      endpoint: "/v1-crypt/catalogs/departments?codpai=001"
+                    - code: municipio
+                      <<: *crm-field-dropdown
+                      hiddenHeader: true
+                      placeholder: "Municipio"
+                      without-padding-bottom: true
+                      endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
+                      parent: "departamento"
               "403240":
                 index: 6
                 send-to-app: true
@@ -1134,32 +1243,17 @@
                 placeholder: "No. de casa"
               "388332":
                 index: 12
-                send-to-app: true
+                <<: *crm-field-dropdown
                 header: "Departamento"
                 placeholder: "Selecciona un departamento"
-                title: "Selecciona un departamento"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                endpoint: "/v1-crypt/catalogs/departments?codpai=001"
               "388333":
                 index: 13
-                send-to-app: true
+                <<: *crm-field-dropdown
                 header: "Municipio"
                 placeholder: "Selecciona un municipio"
-                title: "Selecciona un municipio"
-                inputType: "TEXT"
-                required: true
-                type: "ACCOUNTS"
-                options:
-                  - code: "CREDIT_CARD"
-                    showComponents: 
-                      - code: "VALID_THRU"
-                default-value-to-crm: "${stepData.components[@id='SELECTED_ACCOUNT'].text()}"
+                endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
+                parent: "388332"
             #---No en APP---#
             #  "388458":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='prinom'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segnom'].value"
@@ -1271,7 +1365,7 @@
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
           16114:
             debug: false
-            title: "Solicitud de constancia de prestamos - PREVIEW"
+            title: "Solicitud de constancia de prestamos"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1295,7 +1389,7 @@
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
-                text: "Solicitud de constancia de prestamos - PREVIEW"
+                text: "Solicitud de constancia de prestamos"
               "442047":
                 index: 2
                 <<: *crm-field-mail
@@ -1310,63 +1404,105 @@
                 <<: *crm-field-inputAlfa
                 hiddenHeader: true
                 placeholder: "Dirección de residencia"
-              "442050":
+              "217004":
                 index: 5
-                send-to-app: true
-                title:  "Tipo de constancia"
+                <<: *crm-field-radiobutton
                 header: "Tipo de constancia" 
-                type: RADIOBUTTON
                 options:
-                  - title: FINIQUITO
-                    code: Finiquito
+                  - title: FINIQUITOS
+                    code: Finiquitos
                     index: 1
+                    showComponents:
+                      - code: "final"
+                        visibility: true
+                      - code: "cita"
+                        visibility: false
+                      - code: "proyectada"
+                        visibility: false
                   - title: SALDOS
                     code: Saldos
                     index: 2
+                    showComponents:
+                      - code: "final"
+                        visibility: false
+                      - code: "cita"
+                        visibility: false
+                      - code: "proyectada"
+                        visibility: false
                   - title: SALDOS PROYECTADOS
-                    code: Saldos Proyectados
+                    code: Saldos proyectados
                     index: 3
+                    showComponents:
+                      - code: "final"
+                        visibility: false
+                      - code: "cita"
+                        visibility: false
+                      - code: "proyectada"
+                        visibility: true
                   - title: EMBAJADA
                     code: Embajada
                     index: 4
-              "fecha":
+                    showComponents:
+                      - code: "final"
+                        visibility: false
+                      - code: "cita"
+                        visibility: true
+                      - code: "proyectada"
+                        visibility: false
+              "cita":
                 index: 6
                 <<: *crm-field-date
-                header: "Fecha final"
-              "443030":
+                header: "Fecha de la cita en la embajada"
+                hidden: true
+              "final":
                 index: 7
-                send-to-app: true
-                header: "Préstamo"
-                placeholder: "Ingresa el No. de prestamo"
-              "442051":
+                <<: *crm-field-date
+                header: "Fecha Final"
+                hidden: true
+              "proyectada":
                 index: 8
-                <<: *crm-field-selage
-              "443042":
+                <<: *crm-field-date
+                header: "Fecha proyectada"
+                hidden: true
+              "ptmos":
                 index: 9
+                <<: *crm-field-inputList
+                header: "Préstamo"
+                placeholder: "Ingrese el No. de prestamo"
+                maxItems: 5
+                defaultItems: 1
+                titleButtonAdd: "+ Agregar otro préstamo"
+              "185810":
+                index: 10
+                <<: *crm-field-selage
+              "cuenta":
+                index: 11
                 <<: *crm-field-inputAlfa
-                header: "Constancia dirigida a" 
+                header: "Constancia dirigida a"
                 placeholder: "Ingresa el nombre de la empresa/persona"
               "checkbox":
-                index: 10
-                send-to-app: true
-                text: "Autorizar a un tercero para recoger constancia"
-                type: "CHECKBOX"
-              "lbl1":
-                index: 11
-                send-to-app: true
-                header: "NOTA:"
-                text: "· La comisión por emisión de la constancia es de L.150.00"
-                type: "MESSAGE"
-              "lbl2":
                 index: 12
-                send-to-app: true
-                text: "· Solicitudes recibidas despues de las 4:00 PM procesarán al siguiente día hábil."
-                type: "MESSAGE"
-              "lbl3":
+                <<: *crm-field-checkbox
+                header: "Autorizar a un tercero para recoger constancia"
+                type: "CHECKBOX"
+              "nombre":
                 index: 13
-                send-to-app: true
-                text: "· Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
-                type: "MESSAGE"
+                <<: *crm-field-inputAlfa
+                header: "Ingresa los datos del tercero"
+                placeholder: "Nombre completo"
+                hidden: true
+              "identidad":
+                index: 14
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "No. de identidad"
+                hidden: true
+              "msg1":
+                index: 15
+                <<: *crm-field-message
+                header-text-policy: none
+                header: "NOTA:"
+                text: "La comisión por emisión de la constancia es de L.150.00\\n\\t•Solicitudes recibidas después de las 4:00 PM procesarán al siguiente día hábil.\\n\\t•Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
             #---No en APP---#
             #  "442044":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -1475,11 +1611,9 @@
                 placeholder: "Ingresa el nombre del comercio"  
               "388718":
                 index: 6
-                send-to-app: true
+                <<: *crm-field-dropdown
                 header: "Tipo de canje"
                 placeholder: "Selecciona el tipo de canje"
-                title: "Selecciona el tipo de canje"
-                type: "DROPDOWN"
                 options:
                   - code: "PAGO DE TARJETA DE CRÉDITO"
                     title: "PAGO DE TARJETA DE CRÉDITO"
@@ -1560,8 +1694,8 @@
     transactions:
       app-infgra:
         <<: *default-core-service
-      #app-catgen:
-      #  <<: *default-core-service
+      app-catgen:
+        <<: *default-core-service
       app-cnmovt:
         <<: *default-core-service
       app-opefor:
@@ -1573,8 +1707,8 @@
         map-transacions:
           app-infgra:
             bean-name: regionalCrmGeneralInformationTransaction
-          #app-catgen:
-          #  bean-name: generalCatalogTransaction
+          app-catgen:
+            bean-name: generalCatalogTransaction
           app-cnmovt:
             bean-name: regionalCrmLastMovementsTransaction
           app-debtar:
@@ -1583,4 +1717,4 @@
             bean-name: regionalCrmCalcTransaction
     logging:
       level:
-        com.bytesw.tyu.bi.components.crm.management.services: trace         
+        com.bytesw.tyu.bi.components.crm.management.services: trace       
