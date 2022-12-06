@@ -811,18 +811,21 @@
                 index: 12
                 <<: *crm-field-valor
                 header: "Límite solicitado"
+              "186136":
+                value-for-crm: "'00.0'" # SE DEBE HACER EL CALCULO DE LA 183443 + 183444
               "183445":
                 index: 3
                 <<: *crm-field-dropdown
                 header: "Selecciona el tipo de tarjeta"
                 placeHolder: "Selecciona el tipo de tarjeta"
-              "183446":
+              "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "183446":
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
               "183447":
-                <<: *crm-field-inputDisabled
-                text: "PERMANENTE"
+                value-for-crm: "PERMANENTE"
               "183439":
                 value-for-crm: "' '"
               "183448":
@@ -895,7 +898,6 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
@@ -912,6 +914,7 @@
                       - code: "selret"
                         disabled: false
                         visibility: true
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='200326'].text].number"
               "200327":
                 index: 3
                 <<: *crm-field-phone
@@ -928,7 +931,7 @@
               "200330":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dircli'].value"
               "200331":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='Moneda'].value"
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='200326'].text].currency"
               "200332":
                 send-to-app: false
                 text: "GregorianCalendar.getTime()"
@@ -947,22 +950,30 @@
                 header: "Ingrese monto a reclamar"
                 hidden: true
                 options: "" #Para que no envie lo que viene en el catalogo 
+              "selret":
+                index: 5
+                <<: *crm-field-accountsDetail
+                header: "Retiros realizados"
+                placeholder: "Selecciona el retiro"
+                parent: "200326"
+                disabled: true
+                visibility: true
               "200315":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='refer'].value"
+               # value-for-crm: REFERENCIA DEL RETIRO SELECCIONADO
               "200316":
                 value-for-crm: "'NATURAL'"
-              "200317":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mfecha'].value"
-              "200318":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mhora'].value"
-            # "200319":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
-              "200336":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='nomatm'].value"
-              "200337":
-                value-for-crm: "' '"
-              "200338":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='codatm'].value"
+              #"200317":
+                # value-for-crm: FECHA DEL RETIRO SELECCIONADO
+              #"200318":
+                # value-for-crm: HORA DEL RETIRO SELECCIONADO
+              #"200319":
+              #   value-for-crm: TARJETA DEL RETIRO SELECCIONADO
+              #"200336":
+                # value-for-crm: NOMBRE-ATM DEL RETIRO SELECCIONADO
+              #"200337":
+                # value-for-crm: HORA DEL RETIRO SELECCIONADO
+              #"200338":
+                # value-for-crm: COD-ATM DEL RETIRO SELECCIONADO
               "200340":
                 index: 6
                 <<: *crm-field-radiobutton
@@ -986,14 +997,6 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
               "241904":
                 value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
-              "selret":
-                index: 5
-                <<: *crm-field-accountsDetail
-                header: "Retiros realizados"
-                placeholder: "Selecciona el retiro"
-                parent: "200326"
-                disabled: true
-                visibility: true
           17449:
             debug: false
             title: "Reposición de tarjeta de crédito"
@@ -1016,7 +1019,6 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
@@ -1024,7 +1026,7 @@
               "207065":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
               "207066":
-                value-for-crm:"'NATURAL'"
+                value-for-crm: "'NATURAL'"
               "207067":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
               "207068":
@@ -1039,12 +1041,14 @@
                 placeholder: "Ingresa tu número de teléfono"
               "207071":
                 value-for-crm: "data.^[id==#field.getStep()].components.^[code==207070].text"
-              "207072":
+              "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "207072":
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
               "207073":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
               "207074":
                 index: 5
                 <<: *crm-field-subform
@@ -1101,8 +1105,8 @@
                       without-padding-bottom: true
                       endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
                       parent: "coddep"
-              "207075":
-                value-for-crm: "data.^[id==#field.getStep()].components.^[code==207074].text"
+              #"207075":
+              #  value-for-crm: LA MISMA QUE EL CAMPO ANTERIOR
               "207076":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
               "207077":
@@ -1535,7 +1539,6 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
               "titulo":
                 index: 1
                 <<: *crm-title-medium-label
@@ -1543,7 +1546,7 @@
               "388703":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
               "388704":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value"
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
               "388705":
                 index: 3
                 <<: *crm-field-mail
@@ -1557,12 +1560,14 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
               "388717":
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-              "388707":
+              "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
+              "388707":
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
               "388708":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numcta'].value"
+                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
               "388709":
                 index: 5
                 <<: *crm-field-inputAlfa
@@ -1597,9 +1602,9 @@
                 placeholder: "0.00"
                 text: "0.00"
               "388714":
-                value-for-crm:"' '"
+                value-for-crm: "' '"
               "388715":
-                value-for-crm:"' '"
+                value-for-crm: "'L'"
               "388718":
                 index: 6
                 <<: *crm-field-dropdown
@@ -1665,4 +1670,4 @@
             bean-name: regionalCrmCalcTransaction
     logging:
       level:
-        com.bytesw.tyu.bi.components.crm.management.services: trace    
+        com.bytesw.tyu.bi.components.crm.management.services: trace
