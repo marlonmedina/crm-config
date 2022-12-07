@@ -236,15 +236,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de reversión cobros tarjetas de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties: #Afecta a propiedades de los campos solo de la gestion
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Solicitud de reversión cobros tarjetas de crédito"
+             # "titulo":
+             #   index: 1
+             #   <<: *crm-title-medium-label
+             #   text: "Solicitud de reversión cobros tarjetas de crédito"
               "176006":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -320,15 +321,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Extrafinanciamiento de compras"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Extrafinanciamiento de compras"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Extrafinanciamiento de compras"
               "176039":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -374,7 +376,7 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito"
+            title: "Solicitud de constancia de tarjeta de crédito - DEBTAR"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -389,16 +391,17 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de constancia de tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
             #---Sí en APP---#
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Solicitud de constancia de tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Solicitud de constancia de tarjeta de crédito"
               "175837":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -491,7 +494,7 @@
                 header: "Fecha Final"
                 hidden: true
               "270607":
-                value-for-crm: "'0.00'"
+                value-for-crm: "'0.00'" # EN CEROS SEGÚN HRIVERA LUN 5 DIC
               "cuenta":
                 index: 9
                 <<: *crm-field-accounts
@@ -506,7 +509,7 @@
                 text: "La comisión por emisión de la constancia es de L.150.00\\n\\t•Solicitudes recibidas después de las 4:00 PM procesarán al siguiente día hábil.\\n\\t•Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
           16069:
             debug: false
-            title: "Actualización de datos SC/HN"
+            title: "Actualización de datos SC/HN - SUBFORM +1"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -521,16 +524,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Actualización de datos SC/HN"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Actualización de datos tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Actualización de datos tarjeta de crédito"
               "175740":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -604,7 +607,7 @@
                       parent: "coddep"
               "175756":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsciudad'].value"
+                # value-for-crm: CIUDAD DEL SUBFORM
               "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
@@ -641,16 +644,17 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de nuevo pin de tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
             #---Sí en APP---#
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Solicitud de nuevo PIN de tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Solicitud de nuevo PIN de tarjeta de crédito"
               "175921":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -705,15 +709,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de tarjeta de crédito adicional"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Tarjeta de crédito adicional"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Tarjeta de crédito adicional"
               "175960":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -796,7 +801,7 @@
                 hiddenHeader: true
           16461:
             debug: false
-            title: "Solicitud de aumento de límite en tarjeta de crédito"
+            title: "Solicitud de aumento de límite en tarjeta de crédito - CAMPOS +1"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -811,15 +816,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de aumento de límite en tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Aumento de límite en tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Aumento de límite en tarjeta de crédito"
               "183440":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -906,10 +912,10 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
               "195406":
                 send-to-app: false
-                value-for-crm: "'Banca Moderna'"
+                value-for-crm: "'GESTION ESTRATEGICA'"
           17154:
             debug: false
-            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito"
+            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -924,17 +930,17 @@
               - retiro
             steps:
               - id: "1"
-                #title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito"
+                title: "Dinero no dispensado en Cajeros Automáticos BP"
                 currentProgress: 0
                 progressGoal: 0
                 showCancelButton: true 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Dinero no dispensado en Cajeros Automáticos BP"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Dinero no dispensado en Cajeros Automáticos BP"
               "200325":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
@@ -1046,7 +1052,7 @@
                 value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
           17449:
             debug: false
-            title: "Reposición de tarjeta de crédito"
+            title: "Reposición de tarjeta de crédito - SUBFORM"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1061,15 +1067,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Reposición de tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Reposición de tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Reposición de tarjeta de crédito"
               "207065":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
@@ -1190,16 +1197,17 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
             #---Sí en APP---#
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Solicitud de tarjeta de crédito"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Solicitud de tarjeta de crédito"
               "388328":
                 index: 2
                 <<: *crm-field-mail
@@ -1389,16 +1397,17 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de constancia de prestamo"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
             #---Sí en APP---#
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Solicitud de constancia de prestamos"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Solicitud de constancia de prestamos"
               "442047":
                 index: 2
                 <<: *crm-field-mail
@@ -1575,7 +1584,7 @@
             #    value-for-crm:"' '"
           21839:
             debug: false
-            title: "Solicitud de canje de puntos"
+            title: "Solicitud de canje de puntos - CALC"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1590,15 +1599,16 @@
               - retiro
             steps:
               - id: "1"
+                title: "Solicitud de canje de puntos"
                 currentProgress: 0
                 progressGoal: 0 
             default-field-properties:
               step: "1"
             process-fields:
-              "titulo":
-                index: 1
-                <<: *crm-title-medium-label
-                text: "Canje de puntos"
+            #  "titulo":
+            #    index: 1
+            #    <<: *crm-title-medium-label
+            #    text: "Canje de puntos"
               "388703":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
