@@ -376,7 +376,7 @@
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito - DEBTAR"
+            title: "Solicitud de constancia de tarjeta de crédito - DEBTAR/BACKEND"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -387,6 +387,11 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "C"
+              debitarACuenta:
+                service: app-debtar
+                properties:
+                  ACCOUNT_NUMBER: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='cuenta'].text].number"
+                stop-if-throws: true
             tags:
               - retiro
             steps:
@@ -509,7 +514,7 @@
                 text: "La comisión por emisión de la constancia es de L.150.00\\n\\t•Solicitudes recibidas después de las 4:00 PM procesarán al siguiente día hábil.\\n\\t•Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
           16069:
             debug: false
-            title: "Actualización de datos SC/HN - SUBFORM +1"
+            title: "Actualización de datos SC/HN"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -549,7 +554,7 @@
                 <<: *crm-field-phone
                 hiddenHeader: true
                 placeholder: "No. de celular"
-              "175755":
+              "direccion":
                 index: 5
                 <<: *crm-field-subform
                 header: "Dirección"
@@ -605,9 +610,20 @@
                       without-padding-bottom: true
                       endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
                       parent: "coddep"
+              "175755":
+                send-to-app: false
+                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text        + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text         + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text       + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text        + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text         + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text       + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text          + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text     + ' '
               "175756":
                 send-to-app: false
-                # value-for-crm: CIUDAD DEL SUBFORM
+                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text
               "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
@@ -801,7 +817,7 @@
                 hiddenHeader: true
           16461:
             debug: false
-            title: "Solicitud de aumento de límite en tarjeta de crédito - CAMPOS +1"
+            title: "Solicitud de aumento de límite en tarjeta de crédito - CAMPOS +1/BACKEND"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -926,6 +942,8 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "C"
+              lastMoves:
+                service: app-cnmovt
             tags:
               - retiro
             steps:
@@ -1007,20 +1025,23 @@
                 visibility: true
               "200315":
                 send-to-app: false
-               # value-for-crm: REFERENCIA DEL RETIRO SELECCIONADO
+                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].reference"
               "200316":
                 send-to-app: false
                 value-for-crm: "'NATURAL'"
-              #"200317":
-                # value-for-crm: FECHA DEL RETIRO SELECCIONADO
-              #"200318":
-                # value-for-crm: HORA DEL RETIRO SELECCIONADO
+              "200317":
+                send-to-app: false
+                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].date.substring(0,10)"
+              "200318":
+                send-to-app: false
+                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].date.substring(12,8)"
               #"200319":
               #   value-for-crm: TARJETA DEL RETIRO SELECCIONADO
               #"200336":
                 # value-for-crm: NOMBRE-ATM DEL RETIRO SELECCIONADO
-              #"200337":
-                # value-for-crm: HORA DEL RETIRO SELECCIONADO
+              "200337":
+                send-to-app: false
+                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='retiro'].text].date.substring(12,8)"
               #"200338":
                 # value-for-crm: COD-ATM DEL RETIRO SELECCIONADO
               "200340":
@@ -1052,7 +1073,7 @@
                 value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
           17449:
             debug: false
-            title: "Reposición de tarjeta de crédito - SUBFORM"
+            title: "Reposición de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-CRM:
               generalInfo:
@@ -1110,7 +1131,7 @@
               "207073":
                 send-to-app: false
                 value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
-              "207074":
+              "direccion":
                 index: 5
                 <<: *crm-field-subform
                 header: "Dirección"
@@ -1166,8 +1187,28 @@
                       without-padding-bottom: true
                       endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
                       parent: "coddep"
-              #"207075":
-              #  value-for-crm: LA MISMA QUE EL CAMPO ANTERIOR
+              "207074":
+                send-to-app: false
+                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text  + ' '
+              "207075":
+                send-to-app: false
+                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
+                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text  + ' '
               "207076":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
