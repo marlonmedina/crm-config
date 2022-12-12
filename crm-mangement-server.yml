@@ -103,7 +103,7 @@
             maxLength: 60
             minLength: 8
             validations: 
-              - regularExpression: '^[a-z0-9!#$%&*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$'
+              - regularExpression: '^[a-z0-9!#$%&*+\\/=?^_`{|}~-]+(?:\\\\.[a-z0-9!#$%&*+\\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$'
                 message: "Correo inválido"
           "accounts": &crm-field-accounts
             header: "Selecciona tu cuenta"
@@ -112,7 +112,7 @@
             inputType: "TEXT"
             type: "ACCOUNTS"
             title: ""
-            dropDownId: "codecount"
+            dropdown-id: "codecount"
           "accountsTC": &crm-field-accountsTC
             header: "Selecciona una tarjeta"
             placeholder: "Selecciona una tarjeta"
@@ -120,13 +120,13 @@
             type: "ACCOUNTS"
             placeholder-color: "5A5A5A"
             title: ""
-            dropDownId: "codetc"
+            dropdown-id: "codetc"
           "accountsDetail": &crm-field-accountsDetail
             placeholder-color: "5A5A5A"
             inputType: "TEXT"
             type: "ACCOUNT_DETAIL"
             title: ""
-            dropDownId: "detacode"
+            dropdown-id: "detacode"
           "phone": &crm-field-phone
             header: "Número de teléfono"
             placeholder: "Número de teléfono"
@@ -146,7 +146,7 @@
             placeholder: "Ingresa dd/mm/aaaa"
             keyboard: "NUMERIC"
             type: "DATE"
-            date-formate: DDMMAAAA
+            date-format: DDMMAAAA
           "inputArea": &crm-field-inputArea
             header: "Observaciones"
             placeholder: "Observaciones"
@@ -190,11 +190,11 @@
             placeholder-color: "5A5A5A"
             type: "DROPDOWN"
             title: ""
-            dropDownId: "dropcod"
-            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].code"
+            dropdown-id: "dropcod"
+            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
           "radiobutton": &crm-field-radiobutton
             type: "RADIOBUTTON"
-            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].code"
+            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
           "checkbox": &crm-field-checkbox
             type: "CHECKBOX"
           "inputList": &crm-field-inputList
@@ -206,7 +206,7 @@
             placeholder-color: "5A5A5A"
             title: ""
             type: "SUBFORM"
-            dropDownId: "subfcod"
+            dropdown-id: "subfcod"
           "label": &crm-field-label
             type: "LABEL"
             header: ""
@@ -223,15 +223,15 @@
             debug: false
             title: "Solicitud de reversión cobros tarjetas de crédito"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -242,16 +242,12 @@
             default-field-properties: #Afecta a propiedades de los campos solo de la gestion
               step: "1"
             process-fields:
-             # "titulo":
-             #   index: 1
-             #   <<: *crm-title-medium-label
-             #   text: "Solicitud de reversión cobros tarjetas de crédito"
               "176006":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "176007":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "176008":
                 index: 3
                 <<: *crm-field-mail
@@ -272,10 +268,16 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "176010":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "176011":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "176012":
                 index: 6
                 <<: *crm-field-valor
@@ -288,10 +290,10 @@
                 index: 8
                 <<: *crm-field-inputArea
               "193294":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
                 send-to-app: false
               "193295":
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
                 send-to-app: false
               "193296":
                 index: 7
@@ -308,15 +310,15 @@
             debug: false
             title: "Extrafinanciamiento de compras"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -327,16 +329,12 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Extrafinanciamiento de compras"
               "176039":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "176040":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "176041":
                 index: 3
                 <<: *crm-field-mail
@@ -352,10 +350,16 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "176043":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "176044":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "176045":
                 index: 5
                 <<: *crm-field-inputDisabled
@@ -370,28 +374,33 @@
                 <<: *crm-field-inputArea
               "193307":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193308":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
           16067:
             debug: false
             title: "Solicitud de constancia de tarjeta de crédito - DEBTAR/BACKEND"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
               debitarACuenta:
                 service: app-debtar
+                variables:
+                  account: data.^[id=='1'].components.^[code=='tarjeta'].text
+                  accountObj: infoAccounts.^[number==#account]
                 properties:
-                  ACCOUNT_NUMBER: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='cuenta'].text].number"
-                stop-if-throws: true
+                  ACCOUNT_NUMBER: "#accountObj.number"
+                  stop-if-throws: true
+                code: BAD_REQUEST
+                message: Error en pago de constancia
             tags:
               - retiro
             steps:
@@ -402,17 +411,12 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Solicitud de constancia de tarjeta de crédito"
               "175837":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "175838":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numid'].value"
+                value-for-crm: "generalInfo.^[id=='numid'].value"
               "175839":
                 index: 2
                 <<: *crm-field-mail
@@ -438,10 +442,10 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "175843":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                value-for-crm: "#accountObj.accountFormatted.substring(12,4)"
               "175844":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                value-for-crm: "#accountObj.number"
               "185810":
                 index: 10
                 <<: *crm-field-selage
@@ -449,13 +453,13 @@
                 value-for-crm: "' '"
               "193244":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193245":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
               "217003":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted"
+                value-for-crm: "#accountObj.accountFormatted"
               "217004":
                 index: 5
                 <<: *crm-field-radiobutton
@@ -516,15 +520,15 @@
             debug: false
             title: "Actualización de datos SC/HN"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -535,20 +539,16 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Actualización de datos tarjeta de crédito"
               "175740":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "175741":
                 index: 3
                 <<: *crm-field-mail
                 header: "Ingresa tus datos personales"
               "175742":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "175743":
                 index: 4
                 <<: *crm-field-phone
@@ -612,15 +612,15 @@
                       parent: "coddep"
               "175755":
                 send-to-app: false
-                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text        + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text         + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text       + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text        + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text         + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text       + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text          + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text     + ' '
+                value-for-crm: "#joinWithoutNull(' ',data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text)"
               "175756":
                 send-to-app: false
                 value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text
@@ -630,32 +630,38 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "175757":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "175758":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "175759":
                 send-to-app: false
                 value-for-crm: "' '"
               "193195":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193196":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
           16074:
             debug: false
             title: "Solicitud de nuevo pin de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -666,17 +672,12 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Solicitud de nuevo PIN de tarjeta de crédito"
               "175921":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "175922":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "175923":
                 index: 4
                 <<: *crm-field-mail
@@ -692,10 +693,16 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "175925":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "175926":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "175927":
                 index: 5
                 <<: *crm-field-selage
@@ -704,23 +711,23 @@
                 value-for-crm: "' '"
               "193288":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193289":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
           16088:
             debug: false
             title: "Solicitud de tarjeta de crédito adicional"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -731,16 +738,12 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Tarjeta de crédito adicional"
               "175960":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "175961":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numid'].value"  
+                value-for-crm: "generalInfo.^[id=='numid'].value"  
               "175962":
                 index: 4  
                 <<: *crm-field-mail
@@ -756,10 +759,16 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "175964":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "175965":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "175966":
                 index: 14
                 <<: *crm-field-selage
@@ -782,10 +791,10 @@
                 value-for-crm: "' '"
               "193297":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193298":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value" 
+                value-for-crm: "generalInfo.^[id=='dszona'].value" 
               "441747":
                 index: 8
                 <<: *crm-field-inputAlfa
@@ -819,15 +828,15 @@
             debug: false
             title: "Solicitud de aumento de límite en tarjeta de crédito - CAMPOS +1/BACKEND"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -838,19 +847,15 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Aumento de límite en tarjeta de crédito"
               "183440":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "183441":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value" 
+                value-for-crm: "generalInfo.^[id=='numeid'].value" 
               "183442":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value" 
+                value-for-crm: "generalInfo.^[id=='fecnac'].value" 
               "183443":
                 send-to-app: false
                 value-for-crm: "'00.0'" # SE DEBE OBTENER DEL BXISALDOACTUAL
@@ -872,7 +877,10 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "183446":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "183447":
                 send-to-app: false
                 value-for-crm: "PERMANENTE"
@@ -922,10 +930,10 @@
                 hiddenHeader: true
               "193312":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "193313":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
               "195406":
                 send-to-app: false
                 value-for-crm: "'GESTION ESTRATEGICA'"
@@ -933,15 +941,15 @@
             debug: false
             title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
               lastMoves:
                 service: app-cnmovt
             tags:
@@ -955,13 +963,9 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Dinero no dispensado en Cajeros Automáticos BP"
               "200325":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "200326":
                 index: 2
                 <<: *crm-field-accounts
@@ -972,7 +976,10 @@
                       - code: "selret"
                         disabled: false
                         visibility: true
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='200326'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='200326'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "200327":
                 index: 3
                 <<: *crm-field-phone
@@ -986,29 +993,32 @@
                 placeholder: "Ingresa tu correo electrónico"
               "200329":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "200330":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dircli'].value"
+                value-for-crm: "generalInfo.^[id=='dircli'].value"
               "200331":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='200326'].text].currency"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='200326'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.currency"
               "200332":
                 send-to-app: false
                 text: "GregorianCalendar.getTime()"
                 value-for-crm: ""            
               "200312":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='mvalor'].value"
+                value-for-crm: "generalInfo.^[id=='mvalor'].value"
               "200333":
                 send-to-app: false
                 value-for-crm: "'2.1.080'"     
               "200334":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
               "200313":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+                value-for-crm: "generalInfo.^[id=='CIF'].value"
               "200314":
                 index: 7
                 <<: *crm-field-valor
@@ -1025,23 +1035,35 @@
                 visibility: true
               "200315":
                 send-to-app: false
-                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].reference"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='selret'].text"
+                 accountObj: "lastMoves.^[number==#account]"
+                value-for-crm: "#accountObj.reference"
               "200316":
                 send-to-app: false
                 value-for-crm: "'NATURAL'"
               "200317":
                 send-to-app: false
-                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].date.substring(0,10)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='selret'].text"
+                 accountObj: "lastMoves.^[number==#account]"
+                value-for-crm: "#accountObj.substring(0,10)"
               "200318":
                 send-to-app: false
-                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='selret'].text].date.substring(12,8)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='selret'].text"
+                 accountObj: "lastMoves.^[number==#account]"
+                value-for-crm: "#accountObj.substring(12,8)"
               #"200319":
               #   value-for-crm: TARJETA DEL RETIRO SELECCIONADO
               #"200336":
                 # value-for-crm: NOMBRE-ATM DEL RETIRO SELECCIONADO
               "200337":
                 send-to-app: false
-                value-for-crm: "lastMoves.^[id=='selret'].accounts.^[number==data.^[id=='1'].components.^[code=='retiro'].text].date.substring(12,8)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='retiro'].text"
+                 accountObj: "lastMoves.^[number==#account]"
+                value-for-crm: "#accountObj.substring(12,8)"
               #"200338":
                 # value-for-crm: COD-ATM DEL RETIRO SELECCIONADO
               "200340":
@@ -1061,13 +1083,13 @@
                         visibility: true
               "200341":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsciudad'].value"
+                value-for-crm: "generalInfo.^[id=='dsciudad'].value"
               "200342":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dscplan'].value"
+                value-for-crm: "generalInfo.^[id=='dscplan'].value"
               "200343":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "241904":
                 send-to-app: false
                 value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
@@ -1075,15 +1097,15 @@
             debug: false
             title: "Reposición de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -1094,22 +1116,18 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Reposición de tarjeta de crédito"
               "207065":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='CIF'].value"
+                value-for-crm: "generalInfo.^[id=='CIF'].value"
               "207066":
                 send-to-app: false
                 value-for-crm: "'NATURAL'"
               "207067":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value"
+                value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "207068":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numid'].value"
+                value-for-crm: "generalInfo.^[id=='numid'].value"
               "207069":
                 index: 4
                 <<: *crm-field-mail
@@ -1127,10 +1145,16 @@
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "207072":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "207073":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "direccion":
                 index: 5
                 <<: *crm-field-subform
@@ -1189,32 +1213,32 @@
                       parent: "coddep"
               "207074":
                 send-to-app: false
-                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text  + ' '
+                value-for-crm: "#joinWithoutNull(' ',data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text)"
               "207075":
                 send-to-app: false
-                value-for-crm: data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text  + ' '
-                             + data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text  + ' '
+                value-for-crm: "#joinWithoutNull(' ',data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='calle'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='avenida'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='bloque'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='etapa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='puntref'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='casa'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='departamento'].text
+                                                    ,data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='municipio'].text)"
               "207076":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "207077":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
               "403240":
                 index: 6
                 send-to-app: true
@@ -1225,15 +1249,15 @@
             debug: false
             title: "Solicitud de tarjeta de crédito - PREVIEW"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -1244,11 +1268,6 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Solicitud de tarjeta de crédito"
               "388328":
                 index: 2
                 <<: *crm-field-mail
@@ -1425,15 +1444,15 @@
             debug: false
             title: "Solicitud de constancia de prestamo - PREVIEW"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -1444,11 +1463,6 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #---Sí en APP---#
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Solicitud de constancia de prestamos"
               "442047":
                 index: 2
                 <<: *crm-field-mail
@@ -1627,15 +1641,15 @@
             debug: false
             title: "Solicitud de canje de puntos - CALC"
             sort-fields-policy: INDEX_ORDER
-            core-services-pre-CRM:
+            core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "G"
+                  INFORMATION_TYPE: "'G'"
               infoAccounts:
                 service: app-infgra
                 properties:
-                  INFORMATION_TYPE: "C"
+                  INFORMATION_TYPE: "'C'"
             tags:
               - retiro
             steps:
@@ -1646,16 +1660,12 @@
             default-field-properties:
               step: "1"
             process-fields:
-            #  "titulo":
-            #    index: 1
-            #    <<: *crm-title-medium-label
-            #    text: "Canje de puntos"
               "388703":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='NomCom'].value" 
+                value-for-crm: "generalInfo.^[id=='NomCom'].value" 
               "388704":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "388705":
                 index: 3
                 <<: *crm-field-mail
@@ -1667,20 +1677,26 @@
                 placeholder: "No. de celular"
               "388716":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+                value-for-crm: "generalInfo.^[id=='banpai'].value"
               "388717":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
+                value-for-crm: "generalInfo.^[id=='dszona'].value"
               "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "388707":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].accountFormatted.substring(12,4)"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account].accountFormatted"
+                value-for-crm: "#accountObj.substring(12,16)"
               "388708":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[id=='Cuentas'].accounts.^[number==data.^[id=='1'].components.^[code=='tarjeta'].text].number"
+                variables-for-crm:
+                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 accountObj: "infoAccounts.^[number==#account]"
+                value-for-crm: "#accountObj.number"
               "388709":
                 index: 5
                 <<: *crm-field-inputAlfa
