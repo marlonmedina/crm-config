@@ -241,7 +241,9 @@
               - id: "1"
                 title: "Solicitud de reversión cobros tarjetas de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties: #Afecta a propiedades de los campos solo de la gestion
               step: "1"
             process-fields:
@@ -328,7 +330,9 @@
               - id: "1"
                 title: "Extrafinanciamiento de compras"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -405,14 +409,16 @@
                   stop-if-throws: true
                 code: BAD_REQUEST
                 message: Error en pago de constancia
-                #evaluation: "data.^[id=='1'].components.^[code=='cuenta'].text <> ''"
+                evaluation: "data.^[id=='1'].components.^[code=='cuenta'].text != null"
             tags:
               - retiro
             steps:
               - id: "1"
                 title: "Solicitud de constancia de tarjeta de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -486,52 +492,40 @@
                     showComponents:
                       - code: "175842"
                         visibility: false
-                        required: false
                       - code: "217005"
                         visibility: false
-                        required: false
                       - code: "cuenta"
                         visibility: true
-                        required: true
                   - title: DIRIGIDA CON SALDO
                     code: Dirigida con saldo
                     index: 2
                     showComponents:
                       - code: "175842"
                         visibility: false
-                        required: false
                       - code: "217005"
                         visibility: false
-                        required: false
                       - code: "cuenta"
                         visibility: true
-                        required: true
                   - title: EMBAJADA
                     code: Embajada
                     index: 3
                     showComponents:
                       - code: "175842"
                         visibility: true
-                        required: true
                       - code: "217005"
                         visibility: false
-                        required: false
                       - code: "cuenta"
                         visibility: false
-                        required: false
                   - title: FINIQUITO
                     code: Finiquito
                     index: 4
                     showComponents:
                       - code: "175842"
                         visibility: false
-                        required: false
                       - code: "217005"
                         visibility: true
-                        required: true
                       - code: "cuenta"
                         visibility: false
-                        required: false
               "217005": # missing
                 index: 7
                 <<: *crm-field-date
@@ -575,7 +569,9 @@
               - id: "1"
                 title: "Actualización de datos SC/HN"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -709,7 +705,9 @@
               - id: "1"
                 title: "Solicitud de nuevo pin de tarjeta de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -775,7 +773,9 @@
               - id: "1"
                 title: "Solicitud de tarjeta de crédito adicional"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -884,7 +884,9 @@
               - id: "1"
                 title: "Solicitud de aumento de límite en tarjeta de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -1000,6 +1002,7 @@
                 title: "Dinero no dispensado en Cajeros Automáticos BP"
                 currentProgress: 0
                 progressGoal: 0
+                next-step: "finalStep"
                 showCancelButton: true 
             default-field-properties:
               step: "1"
@@ -1153,7 +1156,9 @@
               - id: "1"
                 title: "Reposición de tarjeta de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -1306,7 +1311,9 @@
               - id: "1"
                 title: "Solicitud de tarjeta de crédito"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -1502,7 +1509,9 @@
               - id: "1"
                 title: "Solicitud de constancia de prestamo"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
@@ -1699,7 +1708,9 @@
               - id: "1"
                 title: "Solicitud de canje de puntos"
                 currentProgress: 0
-                progressGoal: 0 
+                progressGoal: 0
+                next-step: "finalStep"
+                showCancelButton: true
             default-field-properties:
               step: "1"
             process-fields:
