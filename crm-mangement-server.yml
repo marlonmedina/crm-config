@@ -409,7 +409,7 @@
                   stop-if-throws: true
                 code: BAD_REQUEST
                 message: Error en pago de constancia
-                evaluation: "data.^[id=='1'].components.^[code=='cuenta'].text != null"
+                #evaluation: "data.^[id=='1'].components.^[code=='cuenta'].text != null"
             tags:
               - retiro
             steps:
@@ -552,7 +552,7 @@
                 text: "La comisión por emisión de la constancia es de L.150.00\\n\\t•Solicitudes recibidas después de las 4:00 PM procesarán al siguiente día hábil.\\n\\t•Su constancia estará disponible en la agencia solicitada en 4 días hábiles."
           16069:
             debug: false
-            title: "Actualización de datos SC/HN"
+            title: "Actualización de datos SC/HN -SUBFORM/GUARDAR"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -784,7 +784,7 @@
                 value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "175961": #missing
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='numid'].value"  
+                value-for-crm: "generalInfo.^[id=='numeid'].value"  
               "175962":
                 index: 4  
                 <<: *crm-field-mail
@@ -867,7 +867,7 @@
                 hiddenHeader: true
           16461:
             debug: false
-            title: "Solicitud de aumento de límite en tarjeta de crédito - CAMPOS +1/BACKEND"
+            title: "Solicitud de aumento de límite en tarjeta de crédito - FUNCTIONSUMAR/BACKEND"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -901,14 +901,14 @@
                 value-for-crm: "generalInfo.^[id=='fecnac'].value" 
               "183443":
                 send-to-app: false
-                value-for-crm: "'00.0'" # SE DEBE OBTENER DEL BXISALDOACTUAL
+                value-for-crm: infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance
               "183444":
                 index: 12
                 <<: *crm-field-valor
                 header: "Límite solicitado"
               "186136":
                 send-to-app: false
-                value-for-crm: "'00.0'" # SE DEBE HACER EL CALCULO DE LA 183443 + 183444
+                value-for-crm: "'00.0'" # SE DEBE HACER EL CALCULO DE LA 183443 + 183444 FUNCTION LA DEBE CREAR BACKEND COMO EL DE CONCATENAR DIRECCION #joinWithoutNull-
               "183445":
                 index: 3
                 <<: *crm-field-dropdown
@@ -961,7 +961,7 @@
                 placeholder: "No. de celular"
               "183454": #missing
                 send-to-app: false
-                value-for-crm: "data.^[id==#field.getStep()].components.^[code==183453].text"
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code=='183453'].text"
               "183455":
                 index: 8
                 <<: *crm-field-phone
@@ -1068,7 +1068,7 @@
                 <<: *crm-field-valor
                 header: "Ingrese monto a reclamar"
                 hidden: true
-                options: "" #Para que no envie lo que viene en el catalogo 
+                options: "" #Para que no envie lo que viene en el catalogo y deje ingresar un valor al cliente
               "selret": #missing
                 index: 5
                 <<: *crm-field-accountsDetail
@@ -1101,7 +1101,8 @@
               #"200319":
               #   value-for-crm: TARJETA DEL RETIRO SELECCIONADO
               #"200336":
-                # value-for-crm: NOMBRE-ATM DEL RETIRO SELECCIONADO
+              #  send-to-app: false
+              #  value-for-crm: "generalInfo.^[id=='nomatm'].value"
               "200337":
                 send-to-app: false
                 variables-for-crm:
@@ -1109,7 +1110,8 @@
                  accountObj: "lastMoves.^[number==#account]"
                 value-for-crm: "#accountObj.substring(12,8)"
               #"200338":
-                # value-for-crm: COD-ATM DEL RETIRO SELECCIONADO
+              #  send-to-app: false
+              #  value-for-crm: "generalInfo.^[id=='codatm'].value"
               "200340":
                 index: 6
                 <<: *crm-field-radiobutton
@@ -1139,7 +1141,7 @@
                 value-for-crm: "'LOGISTICA_BP_CAJEROS@BANPAIS.HN'"
           17449:
             debug: false
-            title: "Reposición de tarjeta de crédito"
+            title: "Reposición de tarjeta de crédito - SUBFORM"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -1173,7 +1175,7 @@
                 value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "207068":
                 send-to-app: false
-                value-for-crm: "generalInfo.^[id=='numid'].value"
+                value-for-crm: "generalInfo.^[id=='numeid'].value"
               "207069":
                 index: 4
                 <<: *crm-field-mail
