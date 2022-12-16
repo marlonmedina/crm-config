@@ -43,6 +43,39 @@
             request: 5m
     crm:
       integration:
+        default-voucher-step:                                                     # Definición del step por defecto
+          default-field-properties:                                               # Propiedades a aplicar a los campos del voucher, no tiene relación con la definicion del proceso, únicamente es para el voucher
+            placeholder-text-policy: capitalize-first-letter-and-trim
+            header-policy: no-header
+            header-text-policy: capitalize-first-letter-and-trim
+            title-policy: add-space-and-colon-suffix
+            title-text-policy: capitalize-first-letter-and-trim
+            tooltip-text-policy: capitalize-first-letter-and-trim
+            options-text-policy: capitalize-first-letter-and-trim
+            min-length: 1
+            type: INPUT
+            input-type: TEXT
+            keyboard: ALPHANUMERIC
+            text-color: "024989"
+            conversion-bean-name: coreDefaultValueBeanConversionFieldValue
+            step: "result"
+          steps:                                                                  # Configuración de los pasos
+            - id: "result"
+              title: "Creación de Caso CRM"
+          fields:                                                                 # Campos que conforman el resultado tomar en cuenta que "voucher" es el nodo de donde se toman los datos del comprobandte
+            "title": 
+              type: title
+              value: "voucher.title" 
+            "date": 
+              #header: "Fecha"
+              value: "voucher.date"
+            "correlative": 
+              header: "Correlativo"
+              value: "voucher.id" 
+            #"estimate": 
+            #  value: "voucher.estimateTime" 
+            "message":
+              value: "'\n\nRecibirás un correo con mayor información.'"
         all-processes:
           enabled: true
           attention-area: "BANPAIS APP"
@@ -69,6 +102,7 @@
           options-text-policy: capitalize-first-letter-and-trim
           header-text-policy: capitalize-first-letter-and-trim
           title-text-policy: capitalize-first-letter-and-trim
+        #  header-policy: no_header
           without-padding-bottom: true
           keyboard: ALPHANUMERIC
           send-to-app: true
@@ -149,6 +183,9 @@
             keyboard: "NUMERIC"
             type: "DATE"
             date-format: DDMMAAAA
+            variables-for-crm:
+              date: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            value-for-crm: "#formatDate('ddMMYYYY','dd/MM/YYYY','#date')"
           "inputArea": &crm-field-inputArea
             header: "Observaciones"
             placeholder: "Observaciones"
@@ -224,7 +261,7 @@
         processes:
           16056:
             debug: false
-            title: "Solicitud de reversión cobros tarjetas de crédito"
+            title: "Solicitud de reversión cobros tarjetas de crédito - RADIOBTN"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -388,7 +425,7 @@
                 value-for-crm: "generalInfo.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito - EVALUATION/BACKEND"
+            title: "Solicitud de constancia de tarjeta de crédito - EVALUATION/BACKEND/RADIOBTN"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -404,12 +441,13 @@
                 variables:
                   account: data.^[id=='1'].components.^[code=='cuenta'].text
                   accountObj: infoAccounts.^[number==#account]
+                  accountNull: "data.^[id=='1'].components.^[code=='cuenta'] != null ? data.^[id=='1'].components.^[code=='cuenta'].text : null"
                 properties:
                   ACCOUNT_NUMBER: "#accountObj.number"
                   stop-if-throws: true
                 code: BAD_REQUEST
                 message: Error en pago de constancia
-                #evaluation: "data.^[id=='1'].components.^[code=='cuenta'].text != null"
+                evaluation: "#accountNull != null"
             tags:
               - retiro
             steps:
@@ -908,7 +946,7 @@
                 header: "Límite solicitado"
               "186136":
                 send-to-app: false
-                value-for-crm: "'00.0'" # SE DEBE HACER EL CALCULO DE LA 183443 + 183444 FUNCTION LA DEBE CREAR BACKEND COMO EL DE CONCATENAR DIRECCION #joinWithoutNull-
+                value-for-crm: "#sum('#,###.00','data.^[id=='1'].components.^[code=='183443'].text','data.^[id=='1'].components.^[code=='183444'].text')"
               "183445":
                 index: 3
                 <<: *crm-field-dropdown
@@ -982,7 +1020,7 @@
                 value-for-crm: "'GESTION ESTRATEGICA'"
           17154:
             debug: false
-            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET"
+            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET/RADIOBTN"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
