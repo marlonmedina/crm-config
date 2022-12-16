@@ -46,7 +46,7 @@
         default-voucher-step:                                                     # Definición del step por defecto
           default-field-properties:                                               # Propiedades a aplicar a los campos del voucher, no tiene relación con la definicion del proceso, únicamente es para el voucher
             placeholder-text-policy: capitalize-first-letter-and-trim
-            header-policy: no-header
+            header-policy: add-colon-suffix
             header-text-policy: capitalize-first-letter-and-trim
             title-policy: add-space-and-colon-suffix
             title-text-policy: capitalize-first-letter-and-trim
@@ -61,17 +61,19 @@
             step: "result"
           steps:                                                                  # Configuración de los pasos
             - id: "result"
-              title: "Creación de Caso CRM"
+              title: "Tu gestión ha sido ingresada con éxito"
           fields:                                                                 # Campos que conforman el resultado tomar en cuenta que "voucher" es el nodo de donde se toman los datos del comprobandte
-            "title": 
-              type: title
-              value: "voucher.title" 
             "date": 
-              #header: "Fecha"
+              header-policy: no-header
+              header: "Fecha"
+              text-color: "5A5A5A"
               value: "voucher.date"
             "correlative": 
-              header: "Correlativo"
+              header: "Número de gestión"
               value: "voucher.id" 
+            "title": 
+              header: "Gestión"
+              value: "voucher.title" 
             #"estimate": 
             #  value: "voucher.estimateTime" 
             "message":
@@ -80,8 +82,8 @@
           enabled: true
           attention-area: "BANPAIS APP"
           configuration:
-            employeeSessionId: "  0"
-            systemSessionId: "1"
+            employeeSessionId: "0"
+            systemSessionId: "0"
             tt: "39"      
           default-process:
             debug: true
@@ -226,7 +228,8 @@
             minLength: 1
             value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
           "dropdown": &crm-field-dropdown
-            options-text-policy: none
+            #options-text-policy: none
+            options-text-policy: capitalize-first-letter-and-trim
             placeholder-color: "5A5A5A"
             type: "DROPDOWN"
             title: ""
@@ -1824,6 +1827,14 @@
                 header: "Valor del credito"
                 placeholder: "0.00"
                 text: "0.00"
+              "borrar":
+                index: 11
+                <<: *crm-field-inputList
+                header: "Préstamo"
+                placeholder: "Ingrese el No. de prestamo"
+                maxItems: 5
+                defaultItems: 1
+                titleButtonAdd: "+ Agregar otro préstamo"
               "388714":
                 send-to-app: false
                 value-for-crm: "' '"
