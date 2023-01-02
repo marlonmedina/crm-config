@@ -67,7 +67,7 @@
               header-policy: no-header
               header: "Fecha"
               text-color: "5A5A5A"
-              value: "voucher.date"
+              value: "#formatDate(\"YYYY-MM-dd'T'HH:mm:ss\",\"dd/MM/YYYY' 'hh:mm:ss a\", voucher.date)"
             "correlative": 
               header: "Número de gestión"
               value: "voucher.id" 
@@ -85,6 +85,15 @@
             employeeSessionId: "0"
             systemSessionId: "0"
             tt: "39"      
+          processes-configuration: #Configuración para obtener todos los procesos ProcesosBancaElectronica
+            tt: "39"
+          query-process-configuration:  #Configuración para obtener el proceso EstructuraProceso
+            tt: "30"
+            company: "-1"
+          save-process-configuration:  #Configuración para CrearCaso
+            tt: "30"
+            company: "2"
+            employee: "2"       
           default-process:
             debug: true
         default-step:
@@ -187,7 +196,7 @@
             date-format: DDMMAAAA
             variables-for-crm:
               date: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            value-for-crm: "#formatDate('ddMMYYYY','dd/MM/YYYY','#date')"
+            value-for-crm: "#formatDate('ddMMYYYY','dd/MM/YYYY',#date)"
           "inputArea": &crm-field-inputArea
             header: "Observaciones"
             placeholder: "Observaciones"
@@ -234,7 +243,7 @@
             type: "DROPDOWN"
             title: ""
             dropdown-id: "dropcod"
-            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getDropdownId()].text"
           "radiobutton": &crm-field-radiobutton
             type: "RADIOBUTTON"
             value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
@@ -275,6 +284,11 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'C'"
+                  ACCOUNT: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                evaluation: "data.^[id=='1'].components.^[code=='tarjeta'] != null && data.^[id=='1'].components.^[code=='tarjeta'].text !=null"
+                error-status-code: BAD_REQUEST
+                error-message: Número de cuenta no localizada
+                stop-if-throws: true
             tags:
               - retiro
             steps:
@@ -447,9 +461,9 @@
                   accountNull: "data.^[id=='1'].components.^[code=='cuenta'] != null ? data.^[id=='1'].components.^[code=='cuenta'].text : null"
                 properties:
                   ACCOUNT_NUMBER: "#accountObj.number"
-                  stop-if-throws: true
-                code: BAD_REQUEST
-                message: Error en pago de constancia
+                stop-if-throws: true
+                error-status-code: BAD_REQUEST
+                error-message: Error en pago de constancia
                 evaluation: "#accountNull != null"
             tags:
               - retiro
