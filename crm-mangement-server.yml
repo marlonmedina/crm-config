@@ -128,7 +128,7 @@
             input-type: NUMBER
           "[$[?(@.dataType==3)]]":
             type: DROPDOWN
-            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].code"
+            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getDropdownId()].text"
           "[$[?(@.crmDataType==152)]]":
             keyboardExceptions: "A-Z"
         global-field-overrides: #Son los overrides de los campos en general
@@ -243,7 +243,6 @@
             type: "DROPDOWN"
             title: ""
             dropdown-id: "dropcod"
-            value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getDropdownId()].text"
           "radiobutton": &crm-field-radiobutton
             type: "RADIOBUTTON"
             value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
@@ -280,7 +279,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
+              infoAccounts: &crm-infoAccounts-tarjeta
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'C'"
