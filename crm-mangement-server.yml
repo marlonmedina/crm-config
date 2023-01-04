@@ -78,6 +78,12 @@
             #  value: "voucher.estimateTime" 
             "message":
               value: "'\n\nRecibirás un correo con mayor información.'"
+        global-configuration:
+          employeeSessionId: "0"
+          systemSessionId: "0"
+          tt: "30"          
+          company: "2"
+          employee: "0"
         all-processes:
           enabled: true
           attention-area: "BANPAIS APP"
@@ -86,25 +92,20 @@
             systemSessionId: "0"
             tt: "39"      
           processes-configuration: #Configuración para obtener todos los procesos ProcesosBancaElectronica
+            systemSessionId: "2"
             tt: "39"
           query-process-configuration:  #Configuración para obtener el proceso EstructuraProceso
-            tt: "30"
+            systemSessionId: "2"
             company: "-1"
+            tt: "31"
           save-process-configuration:  #Configuración para CrearCaso
-            tt: "30"
+            systemSessionId: "2"
+            employee: "2"
             company: "2"
-            employee: "2"       
-          default-process:
-            debug: true
+            tt: "30"
         default-step:
           id: "default-step"
           title: Ingrese los datos que se le solicita
-        global-configuration:
-          employeeSessionId: "0"
-          systemSessionId: "0"
-          tt: "30"          
-          company: "2"
-          employee: "0"
         default-field-properties: #Afecta a propiedades de los campos GLOBAL (TODAS LAS GESTIONES)
           value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
           conversion-bean-name: coreDefaultValueBeanConversionFieldValue
@@ -237,8 +238,8 @@
             minLength: 1
             value-for-crm: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
           "dropdown": &crm-field-dropdown
-            #options-text-policy: none
-            options-text-policy: capitalize-first-letter-and-trim
+            options-text-policy: none
+            #options-text-policy: capitalize-first-letter-and-trim
             placeholder-color: "5A5A5A"
             type: "DROPDOWN"
             title: ""
@@ -272,7 +273,7 @@
         processes:
           16056:
             debug: false
-            title: "Solicitud de reversión cobros tarjetas de crédito - RADIOBTN"
+            title: "Solicitud de reversión cobros tarjetas de crédito"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -347,6 +348,7 @@
               "176013":
                 index: 8
                 <<: *crm-field-inputArea
+                required: false
               "193294":
                 value-for-crm: "generalInfo.^[id=='banpai'].value"
                 send-to-app: false
@@ -373,10 +375,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -441,17 +440,14 @@
                 value-for-crm: "generalInfo.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito - EVALUATION/BACKEND/RADIOBTN"
+            title: "Solicitud de constancia de tarjeta de crédito - EVALUATION"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
               debitarACuenta:
                 service: app-debtar
                 variables:
@@ -613,10 +609,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -749,10 +742,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -817,10 +807,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -928,10 +915,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -1043,10 +1027,15 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
+              infoAccounts: &crm-infoAccounts-cuenta
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'C'"
+                  ACCOUNT: "data.^[id=='1'].components.^[code=='cuenta'].text"
+                evaluation: "data.^[id=='1'].components.^[code=='cuenta'] != null && data.^[id=='1'].components.^[code=='cuenta'].text !=null"
+                error-status-code: BAD_REQUEST
+                error-message: Número de cuenta no localizada
+                stop-if-throws: true
               lastMoves:
                 service: app-cnmovt
             tags:
@@ -1064,7 +1053,7 @@
               "200325":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='NomCom'].value"
-              "200326":
+              "cuenta":
                 index: 2
                 <<: *crm-field-accounts
                 endpoint: /v1-crypt/crm/accounts?type=CHECKING&status=ACTIVE
@@ -1074,6 +1063,8 @@
                       - code: "selret"
                         disabled: false
                         visibility: true
+              "200326":
+                sent-to-app: false
                 variables-for-crm:
                  account: "data.^[id=='1'].components.^[code=='200326'].text"
                  accountObj: "infoAccounts.^[number==#account]"
@@ -1202,10 +1193,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -1357,10 +1345,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
@@ -1555,10 +1540,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-cuenta
             tags:
               - retiro
             steps:
@@ -1754,10 +1736,7 @@
                 service: app-infgra
                 properties:
                   INFORMATION_TYPE: "'G'"
-              infoAccounts:
-                service: app-infgra
-                properties:
-                  INFORMATION_TYPE: "'C'"
+              infoAccounts: *crm-infoAccounts-tarjeta
             tags:
               - retiro
             steps:
