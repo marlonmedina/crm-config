@@ -1,4 +1,7 @@
   crm-mangement-server.yml: |
+    spring:
+      jackson:
+        time-zone: "GMT-6"
     core: 
       configuration-clients:
         credit-card-endpoint: http://credit-card-service:8080
@@ -67,7 +70,7 @@
               header-policy: no-header
               header: "Fecha"
               text-color: "5A5A5A"
-              value: "#formatDate(\"YYYY-MM-dd'T'HH:mm:ss\",\"dd/MM/YYYY' 'hh:mm:ss a\", voucher.date)"
+              value: "#formatDate(\"yyyy-MM-dd'T'HH:mm:ss\",\"dd/MM/YYYY' 'hh:mm:ss a\", voucher.date)"
             "correlative": 
               header: "Número de gestión"
               value: "voucher.id" 
@@ -121,7 +124,6 @@
           title-policy: none
           input-type: TEXT
           disabled: false
-          required: true
           min-length: 1
           type: INPUT
         layers: #Se debe tomar en cuenta que los layers se agregan por "Capas", y en orden del registro
@@ -135,6 +137,8 @@
         global-field-overrides: #Son los overrides de los campos en general
           "193294":
             value-for-crm: "BANCO DEL PAIS S. A."
+          "176013":
+            required: true
         global-static-fields: #Afecta a propiedades de los campos GLOBAL (X CAMPO)
           "title": &crm-title-medium-label
             header: ""
@@ -225,7 +229,6 @@
             type: INPUT
             input-type: NUMBER
             keyboard: NUMERIC
-            max-length: 10
             min-length: 1
           "inputDisabled": &crm-field-inputDisabled
             disabled: true
@@ -275,6 +278,7 @@
             debug: false
             title: "Solicitud de reversión cobros tarjetas de crédito"
             sort-fields-policy: INDEX_ORDER
+            required: true
             core-services-pre-crm:
               generalInfo:
                 service: app-infgra
@@ -300,6 +304,7 @@
                 showCancelButton: true
             default-field-properties: #Afecta a propiedades de los campos solo de la gestion
               step: "1"
+              #required: true
             process-fields:
               "176006":
                 send-to-app: false
@@ -348,7 +353,7 @@
               "176013":
                 index: 8
                 <<: *crm-field-inputArea
-                required: false
+                #required: false
               "193294":
                 value-for-crm: "generalInfo.^[id=='banpai'].value"
                 send-to-app: false
@@ -649,36 +654,43 @@
                       hiddenHeader: true
                       placeholder: "Barrio/colonia/residencia"
                       without-padding-bottom: true
+                      required: true
                     - code: calle
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Calle"
                       without-padding-bottom: true
+                      required: true
                     - code: avenida
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Avenida"
                       without-padding-bottom: true
+                      required: true
                     - code: bloque
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Bloque"
                       without-padding-bottom: true
+                      required: true
                     - code: etapa
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Etapa"
                       without-padding-bottom: true
+                      required: true
                     - code: puntref
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Punto de referencia"
                       without-padding-bottom: true
+                      required: true
                     - code: casa
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "No. de casa"
                       without-padding-bottom: true
+                      required: true
                     - code: coddep
                       <<: *crm-field-dropdown
                       hiddenHeader: true
@@ -686,6 +698,7 @@
                       without-padding-bottom: true
                       endpoint: "/v1-crypt/catalogs/departments?codpai=001"
                       dropdown-id: "coddep"
+                      required: true
                     - code: codmun 
                       <<: *crm-field-dropdown #missing
                       hiddenHeader: true
@@ -694,6 +707,7 @@
                       endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
                       dropdown-id: "codmun"
                       parent: "coddep"
+                      required: true
               "175755": #missing
                 send-to-app: false
                 value-for-crm: "#joinWithoutNull(' ',data.^[id=='1'].components.^[code=='direccion'].childComponent[0].components.^[code=='barrio'].text
@@ -800,7 +814,7 @@
                 value-for-crm: "generalInfo.^[id=='dszona'].value"
           16088:
             debug: false
-            title: "Solicitud de tarjeta de crédito adicional"
+            title: "Solicitud de tarjeta de crédito adicional -Guardar"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -812,7 +826,7 @@
               - retiro
             steps:
               - id: "1"
-                title: "Solicitud de tarjeta de crédito adicional"
+                title: "Tarjeta de crédito adicional"
                 currentProgress: 0
                 progressGoal: 0
                 next-step: "finalStep"
@@ -862,6 +876,7 @@
               "175968":
                 index: 7
                 <<: *crm-field-inputNumber
+                max-length: 15
                 hiddenHeader: true
                 placeholder: "Número de identidad"
               "175969":
@@ -920,7 +935,7 @@
               - retiro
             steps:
               - id: "1"
-                title: "Solicitud de aumento de límite en tarjeta de crédito"
+                title: "Aumento de límite en tarjeta de crédito"
                 currentProgress: 0
                 progressGoal: 0
                 next-step: "finalStep"
@@ -939,7 +954,7 @@
                 value-for-crm: "generalInfo.^[id=='fecnac'].value" 
               "183443":
                 send-to-app: false
-                value-for-crm: infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance
+                value-for-crm: "infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance"
               "183444":
                 index: 12
                 <<: *crm-field-valor
@@ -1066,7 +1081,7 @@
               "200326":
                 sent-to-app: false
                 variables-for-crm:
-                 account: "data.^[id=='1'].components.^[code=='200326'].text"
+                 account: "data.^[id=='1'].components.^[code=='cuenta'].text"
                  accountObj: "infoAccounts.^[number==#account]"
                 value-for-crm: "#accountObj.number"
               "200327":
@@ -1089,7 +1104,7 @@
               "200331":
                 send-to-app: false
                 variables-for-crm:
-                 account: "data.^[id=='1'].components.^[code=='200326'].text"
+                 account: "data.^[id=='1'].components.^[code=='cuenta'].text"
                  accountObj: "infoAccounts.^[number==#account]"
                 value-for-crm: "#accountObj.currency"
               "200332":
@@ -1119,7 +1134,7 @@
                 <<: *crm-field-accountsDetail
                 header: "Retiros realizados"
                 placeholder: "Selecciona el retiro"
-                parent: "200326"
+                parent: "cuenta"
                 disabled: true
                 visibility: true
               "200315":
@@ -1338,7 +1353,7 @@
                 type: "RADIOBUTTON"
           21829:
             debug: false
-            title: "Solicitud de tarjeta de crédito - PREVIEW"
+            title: "Solicitud de tarjeta de crédito - "
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -1370,6 +1385,7 @@
               "388323":
                 index: 4
                 <<: *crm-field-inputNumber
+                max-length: 15
                 hiddenHeader: true
                 placeholder: "RTN"
               "388416":
@@ -1531,7 +1547,7 @@
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
             #  "388463":
             #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
-          16114:
+          22621:
             debug: false
             title: "Solicitud de constancia de prestamo - PREVIEW"
             sort-fields-policy: INDEX_ORDER
@@ -1567,7 +1583,7 @@
                 <<: *crm-field-inputAlfa
                 hiddenHeader: true
                 placeholder: "Dirección de residencia"
-              "217004":
+              "442050":
                 index: 5
                 <<: *crm-field-radiobutton
                 header: "Tipo de constancia" 
@@ -1635,7 +1651,7 @@
                 maxItems: 5
                 defaultItems: 1
                 titleButtonAdd: "+ Agregar otro préstamo"
-              "185810":
+              "442051":
                 index: 10
                 <<: *crm-field-selage
               "cuenta":
