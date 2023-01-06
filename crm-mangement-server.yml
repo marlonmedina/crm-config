@@ -46,6 +46,17 @@
             request: 5m
     crm:
       integration:
+        core-process-properties:
+          last-movements:
+            mappings:
+              "date": "mfecha"            
+              "commerce": "mcomer"
+              "status": "msts"
+              "atm-code": "codatm"
+              "atm": "nomatm"
+              "city": "ciuatm"
+              "reference": "refer"
+              "hour": "mhora"
         default-voucher-step:                                                     # Definición del step por defecto
           default-field-properties:                                               # Propiedades a aplicar a los campos del voucher, no tiene relación con la definicion del proceso, únicamente es para el voucher
             placeholder-text-policy: capitalize-first-letter-and-trim
@@ -138,7 +149,7 @@
           "193294":
             value-for-crm: "BANCO DEL PAIS S. A."
           "176013":
-            required: true
+            #required: true
         global-static-fields: #Afecta a propiedades de los campos GLOBAL (X CAMPO)
           "title": &crm-title-medium-label
             header: ""
@@ -200,8 +211,8 @@
             type: "DATE"
             date-format: DDMMAAAA
             variables-for-crm:
-              date: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
-            value-for-crm: "#formatDate('ddMMYYYY','dd/MM/YYYY',#date)"
+              valueDate: "data.^[id==#field.getStep()].components.^[code==#field.getCode()].text"
+            value-for-crm: "#formatDate('ddMMyyyy','dd/MM/yyyy',#valueDate)"
           "inputArea": &crm-field-inputArea
             header: "Observaciones"
             placeholder: "Observaciones"
@@ -267,7 +278,6 @@
             header: ""
             alingTop: -25
             placeholder: ""
-            required: false
             maxLength: 60
             minLength: 1
             endpoint: ""
@@ -278,7 +288,6 @@
             debug: false
             title: "Solicitud de reversión cobros tarjetas de crédito"
             sort-fields-policy: INDEX_ORDER
-            required: true
             core-services-pre-crm:
               generalInfo:
                 service: app-infgra
@@ -294,7 +303,7 @@
                 error-message: Número de cuenta no localizada
                 stop-if-throws: true
             tags:
-              - retiro
+              - tarjeta
             steps:
               - id: "1"
                 title: "Solicitud de reversión cobros tarjetas de crédito"
@@ -304,7 +313,7 @@
                 showCancelButton: true
             default-field-properties: #Afecta a propiedades de los campos solo de la gestion
               step: "1"
-              #required: true
+              #required: true [se hará x campo ya que hay requeridos false]
             process-fields:
               "176006":
                 send-to-app: false
@@ -315,20 +324,24 @@
               "176008":
                 index: 3
                 <<: *crm-field-mail
+                required: true
                 header: "Ingresa tus datos personales"
               "176009":
                 index: 4
                 <<: *crm-field-phone
+                required: true
                 hiddenHeader: true
                 placeholder: "No. de celular"
-              "176038": #missing
+              "176038":
                 index: 5
                 <<: *crm-field-dropdown
+                required: true
                 header: "Tipo de reversión"
                 placeholder: "Selecciona el tipo de reversión"
               "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
+                required: true
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "176010":
                 send-to-app: false
@@ -345,24 +358,26 @@
               "176012":
                 index: 6
                 <<: *crm-field-valor
+                required: true
                 header: "Monto a reversar"
               "176076": # missing
                 index: 7
                 <<: *crm-field-date
+                required: true
                 header: "Fecha de cargo"
               "176013":
                 index: 8
                 <<: *crm-field-inputArea
-                #required: false
               "193294":
                 value-for-crm: "generalInfo.^[id=='banpai'].value"
                 send-to-app: false
               "193295":
                 value-for-crm: "generalInfo.^[id=='dszona'].value"
                 send-to-app: false
-              "193296": # missing
+              "193296":
                 index: 7
                 <<: *crm-field-radiobutton
+                required: true
                 header: "Selecciona la moneda" 
                 options:
                   - code: "L"
@@ -382,7 +397,7 @@
                   INFORMATION_TYPE: "'G'"
               infoAccounts: *crm-infoAccounts-tarjeta
             tags:
-              - retiro
+              - financiamiento
             steps:
               - id: "1"
                 title: "Extrafinanciamiento de compras"
@@ -392,6 +407,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              #required: true [se hará x campo ya que hay requeridos false]
             process-fields:
               "176039":
                 send-to-app: false
@@ -402,15 +418,18 @@
               "176041":
                 index: 3
                 <<: *crm-field-mail
+                required: true
                 header: "Ingresa tus datos personales"
               "176042":
                 index: 4
                 <<: *crm-field-phone
+                required: true
                 hiddenHeader: true
                 placeholder: "No. de celular"
               "tarjeta":
                 index: 2
                 <<: *crm-field-accountsTC
+                required: true
                 endpoint: /v1-crypt/crm/accounts?type=CREDIT_CARD&status=ACTIVE
               "176043":
                 send-to-app: false
@@ -427,11 +446,13 @@
               "176045":
                 index: 5
                 <<: *crm-field-inputDisabled
+                required: true
                 text: "Extrafinanciamiento"
                 value-for-crm: "'EXTRAFINANCIAMIENTO'"
               "176046":
                 index: 6
                 <<: *crm-field-inputAlfa
+                required: true
                 header: "Lugar o comercio"
                 placeholder: "Ingresa el nombre del comercio"
               "176047":
@@ -445,7 +466,7 @@
                 value-for-crm: "generalInfo.^[id=='dszona'].value"
           16067:
             debug: false
-            title: "Solicitud de constancia de tarjeta de crédito - EVALUATION"
+            title: "Solicitud de constancia de tarjeta de crédito"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -456,17 +477,17 @@
               debitarACuenta:
                 service: app-debtar
                 variables:
-                  account: data.^[id=='1'].components.^[code=='cuenta'].text
-                  accountObj: infoAccounts.^[number==#account]
-                  accountNull: "data.^[id=='1'].components.^[code=='cuenta'] != null ? data.^[id=='1'].components.^[code=='cuenta'].text : null"
+                  account: "data.^[id=='1'].components.^[code=='cuenta'] != null ? data.^[id=='1'].components.^[code=='cuenta'].text : null"
+                  #accountObj: infoAccounts.^[number==#account]
+                  accountNull: "data.^[id=='1'].components.^[code=='cuenta'] != null ? #accountObj.number : null"
                 properties:
-                  ACCOUNT_NUMBER: "#accountObj.number"
+                  ACCOUNT_NUMBER: "#accountNull"
                 stop-if-throws: true
                 error-status-code: BAD_REQUEST
                 error-message: Error en pago de constancia
                 evaluation: "#accountNull != null"
             tags:
-              - retiro
+              - constancia
             steps:
               - id: "1"
                 title: "Solicitud de constancia de tarjeta de crédito"
@@ -476,6 +497,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "175837":
                 send-to-app: false
@@ -616,7 +638,7 @@
                   INFORMATION_TYPE: "'G'"
               infoAccounts: *crm-infoAccounts-tarjeta
             tags:
-              - retiro
+              - actualizacion
             steps:
               - id: "1"
                 title: "Actualización de datos SC/HN"
@@ -626,6 +648,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "175740":
                 send-to-app: false
@@ -758,7 +781,7 @@
                   INFORMATION_TYPE: "'G'"
               infoAccounts: *crm-infoAccounts-tarjeta
             tags:
-              - retiro
+              - pin
             steps:
               - id: "1"
                 title: "Solicitud de nuevo pin de tarjeta de crédito"
@@ -768,6 +791,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "175921": 
                 send-to-app: false
@@ -823,21 +847,22 @@
                   INFORMATION_TYPE: "'G'"
               infoAccounts: *crm-infoAccounts-tarjeta
             tags:
-              - retiro
+              - adicional
             steps:
               - id: "1"
                 title: "Tarjeta de crédito adicional"
-                currentProgress: 0
-                progressGoal: 0
-                next-step: "finalStep"
+                currentProgress: 1
+                progressGoal: 2
+                next-step: "2"
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "175960":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='NomCom'].value"
-              "175961": #missing
+              "175961":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='numeid'].value"  
               "175962":
@@ -942,6 +967,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "183440":
                 send-to-app: false
@@ -954,14 +980,22 @@
                 value-for-crm: "generalInfo.^[id=='fecnac'].value" 
               "183443":
                 send-to-app: false
-                value-for-crm: "infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance"
+                variables-for-crm:
+                  account: "data.^[id==#field.getStep()].components.^[code=='tarjeta'].text"
+                  value: "infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance"
+                value-for-crm: "#value"
               "183444":
                 index: 12
                 <<: *crm-field-valor
                 header: "Límite solicitado"
               "186136":
                 send-to-app: false
-                value-for-crm: "#sum('#,###.00','data.^[id=='1'].components.^[code=='183443'].text','data.^[id=='1'].components.^[code=='183444'].text')"
+                variables-for-crm:
+                  account: "data.^[id==#field.getStep()].components.^[code=='tarjeta'].text"
+                  valueBalance: "infoAccounts.^[number==#account].balances.^[type=='credit-limit' && currency=='USD'].balance"
+                  valueLimit: "data.^[id==#field.getStep()].components.^[code=='183444'].text"
+                  valueSum: "#sum('#,###.00', #valueBalance, #valueLimit)"
+                value-for-crm: "#valueSum"
               "183445":
                 index: 3
                 <<: *crm-field-dropdown
@@ -974,7 +1008,7 @@
               "183446":
                 send-to-app: false
                 variables-for-crm:
-                 account: "data.^[id=='1'].components.^[code=='tarjeta'].text"
+                 account: "data.^[id==#field.getStep()].components.^[code=='tarjeta'].text"
                  accountObj: "infoAccounts.^[number==#account]"
                 value-for-crm: "#accountObj.number"
               "183447":
@@ -1035,7 +1069,7 @@
                 value-for-crm: "'GESTION ESTRATEGICA'"
           17154:
             debug: false
-            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET/RADIOBTN"
+            title: "Dinero no dispensado en Cajeros Automáticos BP - Tarjeta débito - SELRET"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -1064,12 +1098,13 @@
                 showCancelButton: true 
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "200325":
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='NomCom'].value"
               "cuenta":
-                index: 2
+                index: 1
                 <<: *crm-field-accounts
                 endpoint: /v1-crypt/crm/accounts?type=CHECKING&status=ACTIVE
                 options:
@@ -1079,20 +1114,20 @@
                         disabled: false
                         visibility: true
               "200326":
-                sent-to-app: false
+                send-to-app: false
                 variables-for-crm:
                  account: "data.^[id=='1'].components.^[code=='cuenta'].text"
                  accountObj: "infoAccounts.^[number==#account]"
                 value-for-crm: "#accountObj.number"
               "200327":
-                index: 3
+                index: 2
                 <<: *crm-field-phone
                 placeholder: "Ingresa tu número de teléfono"
               "200328":
                 send-to-app: false
                 value-for-crm: "data.^[id==#field.getStep()].components.^[code==200327].text"
               "200321":
-                index: 4
+                index: 3
                 <<: *crm-field-mail
                 placeholder: "Ingresa tu correo electrónico"
               "200329":
@@ -1124,13 +1159,13 @@
                 send-to-app: false
                 value-for-crm: "generalInfo.^[id=='CIF'].value"
               "200314":
-                index: 7
+                index: 6
                 <<: *crm-field-valor
                 header: "Ingrese monto a reclamar"
                 hidden: true
                 options: "" #Para que no envie lo que viene en el catalogo y deje ingresar un valor al cliente
               "selret": #missing
-                index: 5
+                index: 4
                 <<: *crm-field-accountsDetail
                 header: "Retiros realizados"
                 placeholder: "Selecciona el retiro"
@@ -1154,26 +1189,17 @@
                 value-for-crm: "#accountObj.substring(0,10)"
               "200318":
                 send-to-app: false
-                variables-for-crm:
-                 account: "data.^[id=='1'].components.^[code=='selret'].text"
-                 accountObj: "lastMoves.^[number==#account]"
-                value-for-crm: "#accountObj.substring(12,8)"
+                value-for-crm: "generalInfo.^[id=='mhora'].value"
               #"200319":
-              #   value-for-crm: TARJETA DEL RETIRO SELECCIONADO
+              #   value-for-crm: ULTIMOS 4 DIGITOS DE LA TD
               #"200336":
               #  send-to-app: false
               #  value-for-crm: "generalInfo.^[id=='nomatm'].value"
-              "200337":
-                send-to-app: false
-                variables-for-crm:
-                 account: "data.^[id=='1'].components.^[code=='retiro'].text"
-                 accountObj: "lastMoves.^[number==#account]"
-                value-for-crm: "#accountObj.substring(12,8)"
               #"200338":
               #  send-to-app: false
               #  value-for-crm: "generalInfo.^[id=='codatm'].value"
               "200340":
-                index: 6
+                index: 5
                 <<: *crm-field-radiobutton
                 header: "Tipo de devolución"
                 options:
@@ -1220,6 +1246,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "207065":
                 send-to-app: false
@@ -1272,41 +1299,49 @@
                       hiddenHeader: true
                       placeholder: "Barrio/colonia/residencia"
                       without-padding-bottom: true
+                      required: true
                     - code: calle
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Calle"
                       without-padding-bottom: true
+                      required: true
                     - code: avenida
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Avenida"
                       without-padding-bottom: true
+                      required: true
                     - code: bloque
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Bloque"
                       without-padding-bottom: true
+                      required: true
                     - code: etapa
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Etapa"
                       without-padding-bottom: true
+                      required: true
                     - code: puntref
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "Punto de referencia"
                       without-padding-bottom: true
+                      required: true
                     - code: casa
                       <<: *crm-field-inputAlfa
                       hiddenHeader: true
                       placeholder: "No. de casa"
                       without-padding-bottom: true
+                      required: true
                     - code: coddep
                       <<: *crm-field-dropdown
                       hiddenHeader: true
                       placeholder: "Departamento"
                       without-padding-bottom: true
+                      required: true
                       endpoint: "/v1-crypt/catalogs/departments?codpai=001"
                       dropdown-id: "coddep"
                     - code: codmun 
@@ -1314,6 +1349,7 @@
                       hiddenHeader: true
                       placeholder: "Municipio"
                       without-padding-bottom: true
+                      required: true
                       endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
                       dropdown-id: "coddmun"
                       parent: "coddep"
@@ -1353,7 +1389,7 @@
                 type: "RADIOBUTTON"
           21829:
             debug: false
-            title: "Solicitud de tarjeta de crédito - "
+            title: "Solicitud de tarjeta de crédito - 2 steps"
             sort-fields-policy: INDEX_ORDER
             core-services-pre-crm:
               generalInfo:
@@ -1362,32 +1398,57 @@
                   INFORMATION_TYPE: "'G'"
               infoAccounts: *crm-infoAccounts-tarjeta
             tags:
-              - retiro
+              - tarjeta
             steps:
               - id: "1"
-                title: "Solicitud de tarjeta de crédito"
-                currentProgress: 0
-                progressGoal: 0
+                title: "Solicitud de tarjeta de crédito 1"
+                progressGoal: 2
+                currentProgress: 1
+                next-step: "2"
+              - id: "2"
+                title: "Solicitud de tarjeta de crédito 2"
+                progressGoal: 2
+                currentProgress: 2
                 next-step: "finalStep"
-                showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
-              "388328":
-                index: 2
-                <<: *crm-field-mail
-                header: "Ingresa tus datos personales"
-              "388335":
-                index: 3
-                <<: *crm-field-phone
-                hiddenHeader: true
-                placeholder: "No. de celular"
+              "388319":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='prinom'].value"
+              "388320":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='segnom'].value"
+              "388321":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='priape'].value"
+              "388322":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='segape'].value"
               "388323":
                 index: 4
                 <<: *crm-field-inputNumber
                 max-length: 15
                 hiddenHeader: true
                 placeholder: "RTN"
+                placeholder-text-policy: none
+              "388324":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value"
+              "388325":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value"
+              "388326":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='sexo'].value"
+              "388327":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsceci'].value"
+              "388328":
+                index: 2
+                <<: *crm-field-mail
+                header: "Ingresa tus datos personales"
               "388416":
                 index: 5
                 <<: *crm-field-inputAlfa
@@ -1423,130 +1484,224 @@
                 <<: *crm-field-inputAlfa
                 hiddenHeader: true
                 placeholder: "No. de casa"
-              "388332":
+              "coddep":
                 index: 12
                 <<: *crm-field-dropdown
                 header: "Departamento"
                 placeholder: "Selecciona un departamento"
                 endpoint: "/v1-crypt/catalogs/departments?codpai=001"
                 dropdown-id: "coddep"
-              "388333": # missing
+              "388332":
+                send-to-app: false
+                #value-for-crm: "data.^[id==#field.getStep()].components.^[code==coddep].text"
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==#coddep.getDropdownId()].text"
+              "codmun": 
                 index: 13
                 <<: *crm-field-dropdown
                 header: "Municipio"
                 placeholder: "Selecciona un municipio"
                 endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
-                parent: "388332"
+                parent: "coddep"
                 dropdown-id: "codmun"
-            #---No en APP---#
-            #  "388458":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='prinom'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segnom'].value"
-            #  "453227":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='priape'].value" +" "+ "generalInfo.^[id=='DatosGrales'].properties.^[id=='segape'].value"  
-            #  "388324":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='numeidsb'].value" 
-            #  "388325":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='fecnac'].value"
-            #  "388326":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='sexo'].value"
-            #  "388327":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dsceci'].value"
-            #  "388334":
-            #    send-to-app: true
-            #  "388336":
-            #    send-to-app: true
-            #  "388348":
-            #    value-for-crm:"' '"
-            #  "388350":
-            #    send-to-app: true
-            #  "388415":
-            #    value-for-crm:"'NO'"
-            #  "388351":
-            #    value-for-crm:"'00000'"
-            #  "388352":
-            #    value-for-crm:"' '"
-            #  "388353":
-            #    value-for-crm:"' '"
-            #  "388354":
-            #    value-for-crm:"'1'"
-            #  "388355":
-            #    value-for-crm:"'1 AGENCIA TORRE DEL PAIS'"
-            #  "388386":
-            #    value-for-crm:"'NO'"
-            #  "388387":
-            #    value-for-crm:"' '"
-            #  "388380":
-            #    value-for-crm:"' '"
-            #  "388430":
-            #    send-to-app: true
-            #  "388356":
-            #    value-for-crm:"' '"
-            #  "388357":
-            #    value-for-crm:"' '"
-            #  "388359":
-            #    value-for-crm:"'A - AMBOS'"
-            #  "388389":
-            #    value-for-crm:"' '"
-            #  "388390":
-            #    value-for-crm:"' '"
-            #  "388391":
-            #    value-for-crm:"' '"
-            #  "388392":
-            #    value-for-crm:"' '"
-            #  "388393":
-            #    value-for-crm:"' '"
-            #  "388394":
-            #    value-for-crm:"' '"
-            #  "388395":
-            #    value-for-crm:"' '"
-            #  "388396":
-            #    value-for-crm:"' '"
-            #  "388397":
-            #    value-for-crm:"' '"
-            #  "388398":
-            #    value-for-crm:"' '"
-            #  "388399":
-            #    value-for-crm:"' '"
-            #  "388400":
-            #    value-for-crm:"' '"
-            #  "388401":
-            #    value-for-crm:"' '"
-            #  "388402":
-            #    value-for-crm:"' '"
-            #  "388403":
-            #    value-for-crm:"' '"
-            #  "388404":
-            #    value-for-crm:"' '"
-            #  "388405":
-            #    value-for-crm:"' '"
-            #  "388406":
-            #    value-for-crm:"' '"
-            #  "388407":
-            #    value-for-crm:"' '"
-            #  "388408":
-            #    value-for-crm:"' '"
-            #  "388409":
-            #    value-for-crm:"' '"
-            #  "388410":
-            #    value-for-crm:"' '"
-            #  "388437":
-            #    send-to-app: true
-            #  "388438":
-            #    value-for-crm:"' '"
-            #  "388439":
-            #    value-for-crm:"'0'"
-            #  "388440":
-            #    value-for-crm:"'0'"
-            #  "388459":
-            #    value-for-crm:"'0'"
-            #  "388460":
-            #    send-to-app: true
-            #  "388461":
-            #    value-for-crm:"'2.1.080'"
-            #  "388462":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value"
-            #  "388463":
-            #    value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='banpai'].value"
+              "388333":
+                send-to-app: false
+                #value-for-crm: "data.^[id==#field.getStep()].components.^[code==codmun].text"
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==#codmun.getDropdownId()].text"
+              "388334":
+                send-to-app: false
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code=='388335'].text"
+              "388335":
+                index: 3
+                <<: *crm-field-phone
+                hiddenHeader: true
+                placeholder: "No. de celular"
+              "388336":
+                send-to-app: false
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code=='388335'].text"
+              "388422":
+                index: 14
+                step: 2
+                <<: *crm-field-inputAlfa
+                header: "Ingresa tus datos laborales"
+                placeholder: "Lugar de trabajo"
+              "388338":
+                index: 21
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Puesto"
+              "388339":
+                index: 23
+                step: 2
+                <<: *crm-field-inputAlfa
+                header: "Antigüedad Laboral"
+                placeholder: "Ingresa la antigüedad laboral"
+              "388429":
+                index: 24
+                step: 2
+                <<: *crm-field-radiobutton
+                header: "Timepo ingresado en la antigüedad laboral"
+                options:
+                  - code: "MESES"
+                    title: "Meses"
+                  - code: "AÑOS"
+                    title: "Años"
+              "388423":
+                index: 15
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Barrio/colonia/residencial"
+              "388424":
+                index: 16
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Calle"
+              "388425":
+                index: 17
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Avenida"
+              "388426":
+                index: 18
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Bloque"
+              "388427":
+                index: 19
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Etapa"
+              "388428":
+                index: 20
+                step: 2
+                <<: *crm-field-inputAlfa
+                hiddenHeader: true
+                placeholder: "Punto de referencia"
+              "coddep2":
+                index: 25
+                step: 2
+                <<: *crm-field-dropdown
+                header: "Departamento"
+                placeholder: "Selecciona un departamento"
+                endpoint: "/v1-crypt/catalogs/departments?codpai=001"
+                dropdown-id: "coddep2"
+              "388345":
+                send-to-app: false
+                #value-for-crm: "data.^[id==#field.getStep()].components.^[code==coddep].text"
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==#coddep2.getDropdownId()].text"
+              "codmun2": 
+                index: 26
+                step: 2
+                <<: *crm-field-dropdown
+                header: "Municipio"
+                placeholder: "Selecciona un municipio"
+                endpoint: "/v1-crypt/catalogs/municipalities?codpai=001"
+                parent: "coddep2"
+                dropdown-id: "codmun2"
+              "388346":
+                send-to-app: false
+                #value-for-crm: "data.^[id==#field.getStep()].components.^[code==codmun].text"
+                value-for-crm: "data.^[id==#field.getStep()].components.^[code==#codmun2.getDropdownId()].text"
+              "388340":
+                index: 27
+                step: 2
+                <<: *crm-field-inputNumber
+                max-length: 15
+                hiddenHeader: true
+                header: "Salario Mensual"
+                placeholder: "0.00"
+                placeholder-text-policy: none
+              "388347":
+                index: 22
+                step: 2
+                <<: *crm-field-phone
+                hiddenHeader: true
+                placeholder: "Telefono de trabajo"
+              "388348":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388349": 
+                index: 28
+                <<: *crm-field-dropdown
+                header: "Producto requerido"
+                placeHolder: "Selecciona un producto"
+              "388350":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388415":
+                send-to-app: false
+                value-for-crm: "'NO'"
+              "388351":
+                send-to-app: false
+                value-for-crm: "'00000'"
+              "388352":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388353":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388354":
+                send-to-app: false
+                value-for-crm: "'1'"
+              "388355":
+                send-to-app: false
+                value-for-crm: "'1 AGENCIA TORRE DEL PAIS'"
+              "388386":
+                send-to-app: false
+                value-for-crm: "'NO'"
+              "388387":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388380":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388430":
+                send-to-app: false
+                value-for-crm: "' pendiente'"
+              "388356":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388357":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388359":
+                send-to-app: false
+                value-for-crm: "'A - AMBOS'"
+              "388410":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388437":
+                send-to-app: false
+                value-for-crm: "'pendiente'"
+              "388438":
+                send-to-app: false
+                value-for-crm: "' '"
+              "388439":
+                send-to-app: false
+                value-for-crm: "'0'"
+              "388440":
+                send-to-app: false
+                value-for-crm: "'0'"
+              "388459":
+                send-to-app: false
+                value-for-crm: "'0'"
+              "388460":
+                send-to-app: false
+                value-for-crm: "'pendiente'"
+              "388461":
+                send-to-app: false
+                value-for-crm: "'2.1.080'"
+              "388462":
+                send-to-app: false
+                value-for-crm: "generalInfo.^[id=='DatosGrales'].properties.^[id=='dszona'].value" 
+              "388463":
+                send-to-app: false
+                value-for-crm: "'BANCO DEL PAIS S.A.'"
           22621:
             debug: false
             title: "Solicitud de constancia de prestamo - PREVIEW"
@@ -1568,6 +1723,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "442047":
                 index: 2
@@ -1764,6 +1920,7 @@
                 showCancelButton: true
             default-field-properties:
               step: "1"
+              required: true
             process-fields:
               "388703":
                 send-to-app: false
@@ -1875,6 +2032,9 @@
                   - name: puntos
                     expression: "data.^[id=='1'].components.^[code=='388712'].text"
                     input-formatter: crmDefaultNumberConverter
+                    stop-if-throws: true
+                    error-status-code: BAD_REQUEST
+                    error-message: "Debe llenar los valores para poder calcular" 
                 result-fields:
                   - name: valorCredito
                     expression: "results.^[id=='Resultados'].groups.^[id=='rTotal'].value"
@@ -1885,6 +2045,9 @@
                   - name: puntos
                     expression: "data.^[id=='1'].components.^[code=='388712'].text"
                     input-formatter: crmDefaultNumberConverter
+                    stop-if-throws: true
+                    error-status-code: BAD_REQUEST
+                    error-message: "Debe llenar los valores para poder calcular" 
                 result-fields:
                   - name: valorCredito
                     expression: "results.^[id=='Resultados'].groups.^[id=='rTotal'].value"
